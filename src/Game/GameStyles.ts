@@ -6,13 +6,11 @@ export const useStyles = makeStyles({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    // flexWrap: 'wrap',
   },
   game: {
     height: '100%',
     width: '80%',
     display: 'flex',
-    // flexWrap: 'wrap',
     flexDirection: 'column',
     backgroundColor: '#dbc18b',
   },
@@ -50,15 +48,17 @@ export const useStyles = makeStyles({
     borderTopLeftRadius: '50%',
   },
   type1Column: {
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,255,0.85)',
   },
   type2Column: {
-    backgroundColor: 'black',
+    // backgroundColor: 'black',
+    backgroundColor: 'rgba(0,0,0,0.85)',
   },
   circle: {
     width: '70%',
     height: 'auto',
-    border: 'solid 1px gray',
+    // border: 'solid 1px gray',
     '&:hover': {
       cursor: 'pointer',
     },

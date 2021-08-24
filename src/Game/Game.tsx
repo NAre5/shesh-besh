@@ -1,13 +1,10 @@
 import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
-import Circle from '@material-ui/icons/FiberManualRecord';
-
-import { Column } from 'models/Column';
-
-import { useGame } from './useGame';
+import React, { useMemo } from 'react';
+import { Column } from '../models/Column';
 import { useStyles } from './GameStyles';
-
-
+import { useGame } from './useGame';
+import Circle from '@material-ui/icons/FiberManualRecord';
+import { Player } from '../models/enums/Player';
 
 const Game = () => {
   const classes = useStyles();
@@ -19,7 +16,7 @@ const Game = () => {
     index,
   }) => (
     <div
-      key={index}
+      // key={index}
       className={classNames(classes.column, {
         [classes.topColumn]: index < columns.length / 2,
         [classes.bottomColumn]: index >= columns.length / 2,
@@ -28,13 +25,13 @@ const Game = () => {
       })}
     >
       {/* {index} */}
-      {Array.from({ length: column.player1_circles }).map((_, circleIndex) => (
+      {Array.from({ length: column.playersCircles[Player.PLAYER1] }).map((_, circleIndex) => (
         <Circle
           key={circleIndex}
           className={classNames(classes.circle, classes.player1Circle)}
         />
       ))}
-      {Array.from({ length: column.player2_circles }).map((_, circleIndex) => (
+      {Array.from({ length: column.playersCircles[Player.PLAYER2] }).map((_, circleIndex) => (
         <Circle
           key={circleIndex}
           className={classNames(classes.circle, classes.player2Circle)}
@@ -50,26 +47,42 @@ const Game = () => {
           {columns
             .slice(0, columns.length / 4)
             .map((column, index) => (
-              <GameColumn column={column} index={index} />
+              <GameColumn
+                column={column}
+                index={index}
+                key={index}
+              />
             ))}
           <div className={classes.divider} />
           {columns
             .slice(columns.length / 4, columns.length / 2)
             .map((column, index) => (
-              <GameColumn column={column} index={columns.length / 4 + index} />
+              <GameColumn
+                column={column}
+                index={columns.length / 4 + index}
+                key={columns.length / 4 + index}
+              />
             ))}
         </div>
         <div className={classes.bottomColumns}>
           {columns
             .slice(columns.length / 2, columns.length / (4 / 3))
             .map((column, index) => (
-              <GameColumn column={column} index={columns.length / 2 + index} />
+              <GameColumn
+                column={column}
+                index={columns.length / 2 + index}
+                key={columns.length / 2 + index}
+              />
             ))}
           <div className={classes.divider} />
           {columns
             .slice(columns.length / (4 / 3))
             .map((column, index) => (
-              <GameColumn column={column} index={columns.length / (4 / 3) + index} />
+              <GameColumn
+                column={column}
+                index={columns.length / (4 / 3) + index}
+                key={columns.length / (4 / 3) + index}
+              />
             ))}
         </div>
       </div>

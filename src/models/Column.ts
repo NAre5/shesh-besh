@@ -1,4 +1,5 @@
+import { Player } from './enums/Player';
+
 export interface Column {
-    player1_circles: number;
-    player2_circles: number;
+    playersCircles: { [key in Player]: number }
 }
