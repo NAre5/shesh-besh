@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Column } from 'models/Column';
 
-export const useApp = () => {
+export const useGame = () => {
     const getInitialColumns = (): Column[] => {
         const initialColumns: Column[] = Array.from({ length: 24 }).map(
             (_, index) => ({
