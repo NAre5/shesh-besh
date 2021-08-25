@@ -60,8 +60,9 @@ export const useGame = () => {
 
         const currentDice = isDicesDouble ? dices[0] : dices[moves.length];
 
-        // if column in index selectedColumnIndex +- dices[moves.length]
         const endIndex = selectedColumnIndex + playerDirection[turnPlayer] * currentDice;
+
+        //TODO: if end index is one of ends colunms
 
         const otherPlayerCirclesInDestination = columns[endIndex].circles[otherPlayer];
 

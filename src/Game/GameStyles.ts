@@ -7,6 +7,10 @@ export const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
   },
+  gameUtils: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   game: {
     height: '100%',
     width: '80%',

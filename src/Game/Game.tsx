@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import classNames, { Argument } from 'classnames';
 import React, { useMemo } from 'react';
 import { Column } from '../models/Column';
 import { useStyles } from './GameStyles';
@@ -9,20 +9,18 @@ import { Player } from '../models/enums/Player';
 const Game = () => {
   const classes = useStyles();
 
-  const { columns, turnPlayer, dices,
+  const { columns, turnPlayer, dices, circlesEaten,
     turnPlayerNeedToReturn, onCircleClick, onColumnClick, switchDices } = useGame();
 
   const GameColumn: React.FC<
-    { column: Column; index: number; onClick?: (index: number) => void; className?: string }
+    { column: Column; index: number; onClick?: (index: number) => void; _classNames?: Argument[] }
   > = ({
-    column, index, onClick, className
+    column, index, onClick, _classNames
   }) => (
       <div
         // key={index}
         onClick={() => onClick && onClick(index)}
-        className={classNames(classes.column, className, {
-          [classes.topColumn]: index < columns.length / 2,
-          [classes.bottomColumn]: index >= columns.length / 2,
+        className={classNames(classes.column, _classNames, {
           [classes.type1Column]: index % 2 !== 0,
           [classes.type2Column]: index % 2 === 0,
         })}
@@ -53,8 +51,37 @@ const Game = () => {
 
   return (
     <div className={classes.app}>
-      {dices[0] + ' ' + dices[1]}
-      <button onClick={switchDices}>switch</button>
+      <div className={classes.gameUtils}>
+        <div>
+          {turnPlayer + ' turn'}
+        </div>
+        <div>
+          {'dices: ' + dices[0] + ' ' + dices[1]}
+        </div>
+        <button onClick={switchDices}>switch</button>
+        <div>
+          <div>
+            circles eaten:
+          </div>
+          <div>
+            {circlesEaten[Player.PLAYER1]}
+            <Circle
+              className={classNames(
+                classes.player1Circle,
+              )}
+            />
+          </div>
+          <div>
+            {circlesEaten[Player.PLAYER2]}
+            <Circle
+              className={classNames(
+                classes.player2Circle,
+              )}
+            />
+          </div>
+
+        </div>
+      </div>
       <div className={classes.game}>
         <div className={classes.topColumns}>
           {columns
@@ -65,7 +92,7 @@ const Game = () => {
                 index={index}
                 key={index}
                 onClick={(turnPlayerNeedToReturn && turnPlayer === Player.PLAYER1) ? onColumnClick : undefined}
-                className={(turnPlayerNeedToReturn && turnPlayer === Player.PLAYER1) ? classes.clickable : undefined}
+                _classNames={[classes.topColumn, turnPlayerNeedToReturn && turnPlayer === Player.PLAYER1 && classes.clickable]}
               />
             ))}
           <div className={classes.divider} />
@@ -76,6 +103,7 @@ const Game = () => {
                 column={column}
                 index={columns.length / 4 + index}
                 key={columns.length / 4 + index}
+                _classNames={[classes.topColumn]}
               />
             ))}
         </div>
@@ -87,6 +115,7 @@ const Game = () => {
                 column={column}
                 index={columns.length / 2 + index}
                 key={columns.length / 2 + index}
+                _classNames={[classes.bottomColumn]}
               />
             ))}
           <div className={classes.divider} />
@@ -98,7 +127,7 @@ const Game = () => {
                 index={columns.length / (4 / 3) + index}
                 key={columns.length / (4 / 3) + index}
                 onClick={(turnPlayerNeedToReturn && turnPlayer === Player.PLAYER2) ? onColumnClick : undefined}
-                className={(turnPlayerNeedToReturn && turnPlayer === Player.PLAYER2) ? classes.clickable : undefined}
+                _classNames={[classes.bottomColumn, turnPlayerNeedToReturn && turnPlayer === Player.PLAYER2 && classes.clickable]}
               />
             ))}
         </div>
