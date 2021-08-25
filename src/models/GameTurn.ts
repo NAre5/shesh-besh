@@ -15,7 +15,7 @@ export type Dices = [number, number];
 export interface GameTurn {
     turnPlayer: Player;
     columns: Column[];
-    moves?: Move[];
+    moves: Move[];
     dices: Dices;
     circlesEaten: CirclesEaten;
     // isFinished: boolean;

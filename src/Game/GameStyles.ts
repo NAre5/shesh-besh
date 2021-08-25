@@ -38,6 +38,11 @@ export const useStyles = makeStyles({
     alignItems: 'center',
     backgroundColor: 'gray',
   },
+  clickable: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
   topColumn: {
     borderBottomRightRadius: '50%',
     borderBottomLeftRadius: '50%',
@@ -48,29 +53,29 @@ export const useStyles = makeStyles({
     borderTopLeftRadius: '50%',
   },
   type1Column: {
-    // backgroundColor: 'white',
-    backgroundColor: 'rgba(255,255,255,0.85)',
+    backgroundColor: 'white',
+    // backgroundColor: 'rgba(255,255,255,0.85)',
   },
   type2Column: {
-    // backgroundColor: 'black',
-    backgroundColor: 'rgba(0,0,0,0.85)',
+    backgroundColor: 'black',
+    // backgroundColor: 'rgba(0,0,0,0.85)',
   },
   circle: {
     width: '70%',
     height: 'auto',
     // border: 'solid 1px gray',
-    '&:hover': {
-      cursor: 'pointer',
-    },
+    transition: 'all 5s linear'
     // backgroundColor: '#bbb',
     // borderRadius: '50%',
     // display: 'inline-block',
   },
   player1Circle: {
-    fill: 'white',
+    fill: 'blue',
+    // fill: 'white',
   },
   player2Circle: {
-    fill: 'black',
+    fill: 'red',
+    // fill: 'black',
   },
   // divider: {
   //   width: '1%'
