@@ -3,10 +3,27 @@ import { Player } from '../models/enums/Player';
 
 export const getRandomDice = (): number => (
     Math.floor(Math.random() * 6 + 1)
-)
+);
+
+export const columnsSplit = {
+    [Player.PLAYER1]: {
+        outerStart: 13,
+        outerEnd: 18,
+        homeStart: 19,
+        homeEnd: 24,
+        hole: 25,
+    },
+    [Player.PLAYER2]: {
+        outerStart: 12,
+        outerEnd: 7,
+        homeStart: 6,
+        homeEnd: 1,
+        hole: 0,
+    },
+}
 
 export const getInitialColumns = (): Column[] => {
-    const initialColumns: Column[] = Array.from({ length: 24 }).map(
+    const initialColumns: Column[] = Array.from({ length: 26 }).map(
         (_, index) => ({
             circles: {
                 [Player.PLAYER1]: 0,
@@ -14,14 +31,14 @@ export const getInitialColumns = (): Column[] => {
             }
         })
     );
-    initialColumns[0].circles[Player.PLAYER1] = 2;
-    initialColumns[5].circles[Player.PLAYER2] = 5;
-    initialColumns[7].circles[Player.PLAYER2] = 3;
-    initialColumns[11].circles[Player.PLAYER1] = 5;
-    initialColumns[12].circles[Player.PLAYER2] = 5;
-    initialColumns[16].circles[Player.PLAYER1] = 3;
-    initialColumns[18].circles[Player.PLAYER1] = 5;
-    initialColumns[23].circles[Player.PLAYER2] = 2;
+    initialColumns[columnsSplit[Player.PLAYER2].homeEnd].circles[Player.PLAYER1] = 2;
+    initialColumns[columnsSplit[Player.PLAYER2].homeStart].circles[Player.PLAYER2] = 5;
+    initialColumns[columnsSplit[Player.PLAYER2].outerEnd + 1].circles[Player.PLAYER2] = 3;
+    initialColumns[columnsSplit[Player.PLAYER2].outerStart].circles[Player.PLAYER1] = 5;
+    initialColumns[columnsSplit[Player.PLAYER1].outerStart].circles[Player.PLAYER2] = 5;
+    initialColumns[columnsSplit[Player.PLAYER1].outerEnd - 1].circles[Player.PLAYER1] = 3;
+    initialColumns[columnsSplit[Player.PLAYER1].homeStart].circles[Player.PLAYER1] = 5;
+    initialColumns[columnsSplit[Player.PLAYER1].homeEnd].circles[Player.PLAYER2] = 2;
 
     return initialColumns;
 };

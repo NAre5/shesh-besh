@@ -21,13 +21,13 @@ export const useStyles = makeStyles({
   divider: {
     width: '3%'
   },
-  topColumns: {
+  player2Columns: {
     height: '50%',
     width: '100%',
     display: 'flex',
     flexDirection: 'row-reverse',
   },
-  bottomColumns: {
+  player1Columns: {
     height: '50%',
     width: '100%',
     display: 'flex',
@@ -47,11 +47,11 @@ export const useStyles = makeStyles({
       cursor: 'pointer',
     },
   },
-  topColumn: {
+  player2Column: {
     borderBottomRightRadius: '50%',
     borderBottomLeftRadius: '50%',
   },
-  bottomColumn: {
+  player1Column: {
     flexDirection: 'column-reverse',
     borderTopRightRadius: '50%',
     borderTopLeftRadius: '50%',
