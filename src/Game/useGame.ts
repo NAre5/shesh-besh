@@ -4,7 +4,7 @@ import { Player } from '../models/enums/Player';
 import { Dices, GameTurn } from '../models/GameTurn';
 import { MapPlayerTo } from '../models/MapPlayerTo';
 import { Move } from '../models/Move';
-import { getInitialColumns, getRandomDice, playerDirection } from '../utils/utils';
+import { columnsSplit, getInitialColumns, getRandomDice, playerDirection } from '../utils/utils';
 
 export const useGame = () => {
 
@@ -18,10 +18,19 @@ export const useGame = () => {
     const [columns, setColumns] = useState<Column[]>(getInitialColumns());
     const [moves, setMoves] = useState<Move[]>([])
     const [dices, setDices] = useState<Dices>([getRandomDice(), getRandomDice()]);
-    const [circlesEaten, setCirclesEaten] = useState({
-        [Player.PLAYER1]: 0,
-        [Player.PLAYER2]: 0,
-    });
+    // const [circlesEaten, setCirclesEaten] = useState({
+    //     [Player.PLAYER1]: 0,
+    //     [Player.PLAYER2]: 0,
+    // });
+
+    const circlesEaten = useMemo<MapPlayerTo<number>>(() => ({
+        [Player.PLAYER1]: columns[columnsSplit[Player.PLAYER2].hole].circles[Player.PLAYER1],
+        [Player.PLAYER2]: columns[columnsSplit[Player.PLAYER1].hole].circles[Player.PLAYER2],
+    }), [columns])
+
+    useEffect(() => {
+        console.log({ circlesEaten });
+    }, [circlesEaten])
 
     useEffect(() => {
         console.log(dices);
@@ -39,7 +48,9 @@ export const useGame = () => {
 
     const isDicesDouble = useMemo<boolean>(() => dices[0] === dices[1], [dices])
 
-    const turnPlayerNeedToReturn = useMemo<boolean>(() => circlesEaten[turnPlayer] > 0, [circlesEaten])
+    const turnPlayerNeedToReturn = useMemo<boolean>(() => (
+        circlesEaten[turnPlayer] > 0
+    ), [circlesEaten, turnPlayer])
 
     useEffect(() => {
         console.log({ turnPlayerNeedToReturn });
@@ -70,7 +81,7 @@ export const useGame = () => {
 
         console.log('end good');
 
-        let newMove: Move = {
+        const newMove: Move = {
             startIndex: selectedColumnIndex,
             endIndex,
         }
@@ -93,7 +104,7 @@ export const useGame = () => {
         };
 
         if (otherPlayerCirclesInDestination === 1) {
-            newMove.circleEaten = true;
+            // newMove.circleEaten = true;
             newColumns[newMove.endIndex] = {
                 circles: {
                     [turnPlayer]: newColumns[newMove.endIndex].circles[turnPlayer],
@@ -101,7 +112,21 @@ export const useGame = () => {
                 } as MapPlayerTo<number>
             };
 
-            setCirclesEaten(prev => ({ ...prev, [otherPlayer]: prev[otherPlayer] + 1 }));
+            const previousOtherPlayerHoleColumn = columns[columnsSplit[otherPlayer].hole]
+            console.log({
+                previousOtherPlayerHoleColumn
+            });
+            newColumns[columnsSplit[otherPlayer].hole] = {
+                circles: {
+                    [turnPlayer]: previousOtherPlayerHoleColumn.circles[turnPlayer] + 1,
+                    [otherPlayer]: previousOtherPlayerHoleColumn.circles[otherPlayer],
+                } as MapPlayerTo<number>
+            }
+            console.log({
+                laterOtherPlayerHoleColumn: newColumns[columnsSplit[otherPlayer].hole]
+            });
+
+            // setCirclesEaten(prev => ({ ...prev, [otherPlayer]: prev[otherPlayer] + 1 }));
         }
 
 
@@ -115,9 +140,17 @@ export const useGame = () => {
 
         if (!turnPlayerNeedToReturn) return;
 
+        onCircleClick(columnsSplit[otherPlayer].hole);
 
-
-
+        setColumns(prev => columns.map((column, index) => index === columnsSplit[otherPlayer].hole
+            ? {
+                circles: {
+                    [turnPlayer]: column.circles[turnPlayer] - 1,
+                    [otherPlayer]: column.circles[otherPlayer],
+                } as MapPlayerTo<number>
+            }
+            : column
+        ))
     }
 
     const switchDices = () => {

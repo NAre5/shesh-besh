@@ -34,7 +34,7 @@ const Game = () => {
               classes.circle, classes.player1Circle,
               { [classes.clickable]: !turnPlayerNeedToReturn && turnPlayer === Player.PLAYER1 }
             )}
-            onClick={() => turnPlayer === Player.PLAYER1 && onCircleClick(index)}
+            onClick={() => !turnPlayerNeedToReturn && turnPlayer === Player.PLAYER1 && onCircleClick(index)}
           />
         ))}
         {Array.from({ length: column.circles[Player.PLAYER2] }).map((_, circleIndex) => (
@@ -44,7 +44,7 @@ const Game = () => {
               classes.circle, classes.player2Circle,
               { [classes.clickable]: !turnPlayerNeedToReturn && turnPlayer === Player.PLAYER2 }
             )}
-            onClick={() => turnPlayer === Player.PLAYER2 && onCircleClick(index)}
+            onClick={() => !turnPlayerNeedToReturn && turnPlayer === Player.PLAYER2 && onCircleClick(index)}
           />
         ))}
       </div>
