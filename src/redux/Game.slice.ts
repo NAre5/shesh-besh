@@ -16,7 +16,7 @@ export interface GameState {
     columns: Column[];
     moves: Move[];
     dices: Dices;
-    hintedMove: undefined | Move;
+    // hintedMove: undefined | Move;//TODO: rethink should be in slice
 }
 
 const initialState: GameState = {
@@ -24,7 +24,7 @@ const initialState: GameState = {
     columns: getInitialColumns(),
     moves: [],
     dices: [getRandomDice(), getRandomDice()],
-    hintedMove: undefined,
+    // hintedMove: undefined,
 };
 
 const gameSlice = createSlice({
@@ -57,12 +57,12 @@ const gameSlice = createSlice({
             // if (state.moves.length === 0)
             state.dices = [state.dices[1], state.dices[0]];
         },
-        setHintedMove(state, action: PayloadAction<Move>) {
-            state.hintedMove = action.payload;
-        },
-        clearHintedMove(state) {
-            state.hintedMove = undefined;
-        },
+        // setHintedMove(state, action: PayloadAction<Move>) {
+        //     state.hintedMove = action.payload;
+        // },
+        // clearHintedMove(state) {
+        //     state.hintedMove = undefined;
+        // },
         // increment(state) {
         //   state.value++
         // },
@@ -72,5 +72,5 @@ const gameSlice = createSlice({
     },
 })
 
-export const { setColumns, addMove, resetMoves, undoMove, switchDices, setHintedMove, clearHintedMove } = gameSlice.actions
+export const { setColumns, addMove, resetMoves, undoMove, switchDices } = gameSlice.actions
 export const gameReducer = gameSlice.reducer

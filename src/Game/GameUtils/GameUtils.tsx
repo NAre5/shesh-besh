@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Circle from '@material-ui/icons/FiberManualRecord';
+// import Circle from '@material-ui/icons/FiberManualRecord';
 
 import { useStyles } from './GameUtils.css';
 import { Dices } from '../../models/GameTurn';
@@ -11,6 +11,7 @@ import { switchDices } from '../../redux/Game.slice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
 import { Move } from '../../models/Move';
+import { GameCircle } from '../GameCircle/GameCircle';
 
 interface Props {
     turnPlayer: Player;
@@ -22,7 +23,6 @@ interface Props {
 export const GameUtils: React.FC<Props> = (props) => {
     const { turnPlayer, dices, circlesEaten, moves } = props;
     const classes = useStyles();
-    const gameClasses = useGameStlyes();
     const dispatch: AppDispatch = useDispatch();
 
 
@@ -39,22 +39,21 @@ export const GameUtils: React.FC<Props> = (props) => {
                 <div>
                     circles eaten:
                 </div>
-                <div>
-                    {circlesEaten[Player.PLAYER1]}
-                    <Circle
-                        className={classNames(
-                            gameClasses.player1Circle,
-                        )}
-                    />
-                </div>
-                <div>
-                    {circlesEaten[Player.PLAYER2]}
-                    <Circle
-                        className={classNames(
-                            gameClasses.player2Circle,
-                        )}
-                    />
-                </div>
+                {[Player.PLAYER1, Player.PLAYER2].map(circlesPlayer => (
+                    <div className={classes.circleCount} key={circlesPlayer}>
+                        {circlesPlayer}
+                        <GameCircle
+                            className={classNames(
+                                classes.circle, {
+                                [classes.player1Circle]: circlesPlayer == Player.PLAYER1,
+                                [classes.player2Circle]: circlesPlayer == Player.PLAYER2,
+                            }
+                            )}
+                        />
+                        {': '}
+                        {circlesEaten[circlesPlayer]}
+                    </div>
+                ))}
             </div>
         </div>
     )

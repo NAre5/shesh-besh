@@ -43,12 +43,6 @@ export const useStyles = makeStyles({
     alignItems: 'center',
     backgroundColor: 'gray',
   },
-  topColumn: {
-    justifyContent: 'flex-start'
-  },  
-  bottomColumn: {
-    justifyContent: 'flex-end'
-  },
   clickable: {
     '&:hover': {
       cursor: 'pointer',
@@ -59,7 +53,8 @@ export const useStyles = makeStyles({
     borderBottomLeftRadius: '50%',
   },
   player1Column: {
-    flexDirection: 'column-reverse',
+    // @ts-ignore
+    flexDirection: 'column-reverse!important',
     borderTopRightRadius: '50%',
     borderTopLeftRadius: '50%',
   },
@@ -71,28 +66,6 @@ export const useStyles = makeStyles({
     backgroundColor: 'black',
     // backgroundColor: 'rgba(0,0,0,0.85)',
   },
-  circle: {
-    width: '70%',
-    height: 'auto',
-    // border: 'solid 1px gray',
-    transition: 'all 5s linear'
-    // backgroundColor: '#bbb',
-    // borderRadius: '50%',
-    // display: 'inline-block',
-  },
-  player1Circle: {
-    fill: 'blue',
-    // fill: 'white',
-  },
-  player2Circle: {
-    fill: 'red',
-    // fill: 'black',
-  },
-  // divider: {
-  //   width: '1%'
-  // },
-  // mainDivider: {
-  // },
 });
 
 // @keyframes App-logo-spin {

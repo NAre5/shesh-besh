@@ -1,5 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 
+const HINTED_CIRCLE_OPACITY = 0.5;
+
 export const useStyles = makeStyles({
   column: {
     border: 'solid black',
@@ -12,6 +14,9 @@ export const useStyles = makeStyles({
   },
   clickable: {
     cursor: 'pointer',
+  },
+  disabled: {
+    cursor: 'not-allowed',
   },
   type1Column: {
     backgroundColor: 'white',
@@ -28,7 +33,7 @@ export const useStyles = makeStyles({
     // transition: 'all 5s linear'
     // backgroundColor: '#bbb',
     borderRadius: '50%',
-    margin: '3%'
+    margin: 'min(0.5vh, 0.5vw)'
     // display: 'inline-block',
   },
   player1Circle: {
@@ -38,5 +43,13 @@ export const useStyles = makeStyles({
   player2Circle: {
     // fill: 'red',
     backgroundColor: 'red',
+  },
+  player1HintedCircle: {
+    // backgroundColor: 'blue',
+    backgroundColor: `rgba(0, 0, 255, ${HINTED_CIRCLE_OPACITY})`,
+  },
+  player2HintedCircle: {
+    // fill: 'red',
+    backgroundColor: `rgba(255, 0, 0, ${HINTED_CIRCLE_OPACITY})`,
   },
 });

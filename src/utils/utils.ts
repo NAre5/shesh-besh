@@ -1,5 +1,5 @@
 // import { v4 as uuidv4 } from 'uuid';
-import { Circle } from '../models/Circle';
+// import { Circle } from '../models/Circle';
 
 import { Column } from '../models/Column';
 import { Player } from '../models/enums/Player';
@@ -24,6 +24,17 @@ export const columnsSplit = {
         homeEnd: 1,
         hole: 0,
     },
+};
+
+export const getOtherPlayer = (player: Player): Player => (
+    player === Player.PLAYER1
+        ? Player.PLAYER2
+        : Player.PLAYER1
+);
+
+export const columnsBoundries = {
+    min: 0,
+    max: 25
 }
 
 export const playerDirection: { [key in Player]: number } = {
