@@ -26,6 +26,11 @@ export const columnsSplit = {
     },
 }
 
+export const playerDirection: { [key in Player]: number } = {
+    [Player.PLAYER1]: 1,
+    [Player.PLAYER2]: -1,
+}
+
 // const generateCircles = (amount: number): Circle[] => (
 //     Array.from({ length: amount }).map(_ => ({ id: uuidv4() }))
 // );
@@ -50,8 +55,3 @@ export const getInitialColumns = (): Column[] => {
 
     return initialColumns;
 };
-
-export const playerDirection: { [key in Player]: number } = {
-    [Player.PLAYER1]: 1,
-    [Player.PLAYER2]: -1,
-}

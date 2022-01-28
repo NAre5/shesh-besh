@@ -1,44 +1,30 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useMemo } from 'react';
+
+import { Move } from '../models/Move';
 import { Column } from '../models/Column';
 import { Player } from '../models/enums/Player';
-import { Dices, GameTurn } from '../models/GameTurn';
 import { MapPlayerTo } from '../models/MapPlayerTo';
-import { Move } from '../models/Move';
-import { columnsSplit, getInitialColumns, getRandomDice, playerDirection } from '../utils/utils';
+import { columnsSplit, getRandomDice, playerDirection } from '../utils/utils';
+import { addMove, GameState, setColumns } from '../redux/Game.slice';
+import { AppDispatch, StoreState } from '../redux/store';
 
 export const useGame = () => {
+    //#region states 
+    const turnPlayer = useSelector<StoreState, GameState['turnPlayer']>(store => store.game.turnPlayer)
+    const columns = useSelector<StoreState, GameState['columns']>(store => store.game.columns)
+    const moves = useSelector<StoreState, GameState['moves']>(store => store.game.moves)
+    const dices = useSelector<StoreState, GameState['dices']>(store => store.game.dices)
+    //#endregion
 
-    const [playersName, setPlayersName] = useState<MapPlayerTo<string>>({//TODO: make playerName changable
-        [Player.PLAYER1]: 'naruto',
-        [Player.PLAYER2]: 'sasuke',
-    })
-    // const [gameHistory, setGameHistory] = useState<GameTurn[]>([]);
+    const dispatch: AppDispatch = useDispatch();
 
-    const [turnPlayer, setTurnPlayer] = useState<Player>(Player.PLAYER1);
-    const [columns, setColumns] = useState<Column[]>(getInitialColumns());
-    const [moves, setMoves] = useState<Move[]>([])
-    const [dices, setDices] = useState<Dices>([getRandomDice(), getRandomDice()]);
-    // const [circlesEaten, setCirclesEaten] = useState({
-    //     [Player.PLAYER1]: 0,
-    //     [Player.PLAYER2]: 0,
-    // });
-
+    //#region memos
     const circlesEaten = useMemo<MapPlayerTo<number>>(() => ({
         [Player.PLAYER1]: columns[columnsSplit[Player.PLAYER2].hole].circles[Player.PLAYER1],
         [Player.PLAYER2]: columns[columnsSplit[Player.PLAYER1].hole].circles[Player.PLAYER2],
     }), [columns])
 
-    // useEffect(() => {
-    //     console.log({ circlesEaten });
-    // }, [circlesEaten])
-
-    // useEffect(() => {
-    //     console.log(dices);
-    // }, [dices])
-
-    // useEffect(() => {
-    //     console.log(columns);
-    // }, [columns])
 
     const otherPlayer: Player = useMemo(() => (
         turnPlayer === Player.PLAYER1
@@ -50,20 +36,8 @@ export const useGame = () => {
 
     const turnPlayerNeedToReturn = useMemo<boolean>(() => (
         circlesEaten[turnPlayer] > 0
-    ), [circlesEaten, turnPlayer])
-
-    // useEffect(() => {
-    //     console.log({ turnPlayerNeedToReturn });
-    // }, [turnPlayerNeedToReturn])
-
-    // const currentTurn = useMemo<GameTurn>(() => ({
-    //     turnPlayer,
-    //     columns,
-    //     moves,
-    //     dices,
-    //     circlesEaten
-    // }), [turnPlayer, columns, dices, circlesEaten])
-
+    ), [circlesEaten, turnPlayer]);
+    //#endregion
 
     const onCircleClick = (selectedColumnIndex: number) => {
 
@@ -104,7 +78,6 @@ export const useGame = () => {
         };
 
         if (otherPlayerCirclesInDestination === 1) {
-            // newMove.circleEaten = true;
             newColumns[newMove.endIndex] = {
                 circles: {
                     [turnPlayer]: newColumns[newMove.endIndex].circles[turnPlayer],
@@ -125,14 +98,10 @@ export const useGame = () => {
             console.log({
                 laterOtherPlayerHoleColumn: newColumns[columnsSplit[otherPlayer].hole]
             });
-
-            // setCirclesEaten(prev => ({ ...prev, [otherPlayer]: prev[otherPlayer] + 1 }));
         }
 
-
-        // add return from the dead moves
-        setMoves(prev => [...prev, newMove]);
-        setColumns(newColumns);
+        dispatch(addMove(newMove));
+        dispatch(setColumns(newColumns));
     }
 
     const onColumnClick = (selectedColumnIndex: number) => {
@@ -142,30 +111,18 @@ export const useGame = () => {
 
         onCircleClick(columnsSplit[otherPlayer].hole);
 
-        setColumns(prev => columns.map((column, index) => index === columnsSplit[otherPlayer].hole
-            ? {
-                circles: {
-                    [turnPlayer]: column.circles[turnPlayer] - 1,
-                    [otherPlayer]: column.circles[otherPlayer],
-                } as MapPlayerTo<number>
-            }
-            : column
-        ))
+        // setColumns(prev => columns.map((column, index) => index === columnsSplit[otherPlayer].hole//TODO: return
+        //     ? {
+        //         circles: {
+        //             [turnPlayer]: column.circles[turnPlayer] - 1,
+        //             [otherPlayer]: column.circles[otherPlayer],
+        //         } as MapPlayerTo<number>
+        //     }
+        //     : column
+        // ))
     }
 
-    const switchDices = () => {
-        if (moves.length === 0 || isDicesDouble)
-            setDices(prev => [prev[1], prev[0]]);
-    }
-
-    //switch players
-    useEffect(() => {
-        if (moves.length === (dices[0] === dices[1] ? 4 : 2)) {
-            setTurnPlayer(otherPlayer);
-            setMoves([]);
-            setDices([getRandomDice(), getRandomDice()]);
-        }
-    }, [moves])
+    // const onCircleHover
 
     return {
         turnPlayer,
@@ -176,6 +133,31 @@ export const useGame = () => {
         onCircleClick,
         onColumnClick,
         turnPlayerNeedToReturn,
-        switchDices
+        // switchDices
     }
 }
+
+
+// useEffect(() => {
+//     console.log({ turnPlayerNeedToReturn });
+// }, [turnPlayerNeedToReturn])
+
+// const currentTurn = useMemo<GameTurn>(() => ({
+//     turnPlayer,
+//     columns,
+//     moves,
+//     dices,
+//     circlesEaten
+// }), [turnPlayer, columns, dices, circlesEaten])
+
+// useEffect(() => {
+//     console.log({ circlesEaten });
+// }, [circlesEaten])
+
+// useEffect(() => {
+//     console.log(dices);
+// }, [dices])
+
+// useEffect(() => {
+//     console.log(columns);
+// }, [columns])

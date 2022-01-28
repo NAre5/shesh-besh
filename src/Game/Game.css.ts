@@ -6,6 +6,7 @@ export const useStyles = makeStyles({
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
+    backgroundColor: 'cadetblue'
   },
   gameUtils: {
     display: 'flex',

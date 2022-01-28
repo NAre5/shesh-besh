@@ -11,18 +11,7 @@ export const useStyles = makeStyles({
     backgroundColor: 'gray',
   },
   clickable: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  player2Column: {
-    borderBottomRightRadius: '50%',
-    borderBottomLeftRadius: '50%',
-  },
-  player1Column: {
-    flexDirection: 'column-reverse',
-    borderTopRightRadius: '50%',
-    borderTopLeftRadius: '50%',
+    cursor: 'pointer',
   },
   type1Column: {
     backgroundColor: 'white',
@@ -33,25 +22,21 @@ export const useStyles = makeStyles({
     // backgroundColor: 'rgba(0,0,0,0.85)',
   },
   circle: {
-    width: '70%',
-    height: 'auto',
+    width: 'min(7vh, 7vw)',
+    height: 'min(7vh, 7vw)',
     // border: 'solid 1px gray',
-    transition: 'all 5s linear'
+    // transition: 'all 5s linear'
     // backgroundColor: '#bbb',
-    // borderRadius: '50%',
+    borderRadius: '50%',
+    margin: '3%'
     // display: 'inline-block',
   },
   player1Circle: {
-    fill: 'blue',
-    // fill: 'white',
+    // fill: 'blue',
+    backgroundColor: 'blue',
   },
   player2Circle: {
-    fill: 'red',
-    // fill: 'black',
+    // fill: 'red',
+    backgroundColor: 'red',
   },
-  // divider: {
-  //   width: '1%'
-  // },
-  // mainDivider: {
-  // },
 });

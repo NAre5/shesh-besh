@@ -6,19 +6,25 @@ import { useStyles } from './GameUtils.css';
 import { Dices } from '../../models/GameTurn';
 import { Player } from '../../models/enums/Player';
 import { MapPlayerTo } from '../../models/MapPlayerTo';
-import { useStyles as useGameStlyes } from '../GameStyles';
+import { useStyles as useGameStlyes } from '../Game.css';
+import { switchDices } from '../../redux/Game.slice';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import { Move } from '../../models/Move';
 
 interface Props {
     turnPlayer: Player;
     dices: Dices;
-    switchDices: () => void;
     circlesEaten: MapPlayerTo<number>;
+    moves: Move[];
 }
 
 export const GameUtils: React.FC<Props> = (props) => {
-    const { turnPlayer, dices, switchDices, circlesEaten } = props;
+    const { turnPlayer, dices, circlesEaten, moves } = props;
     const classes = useStyles();
     const gameClasses = useGameStlyes();
+    const dispatch: AppDispatch = useDispatch();
+
 
     return (
         <div className={classes.root}>
@@ -28,7 +34,7 @@ export const GameUtils: React.FC<Props> = (props) => {
             <div>
                 {'dices: ' + dices[0] + ' ' + dices[1]}
             </div>
-            <button onClick={switchDices}>switch</button>
+            <button onClick={() => (moves.length === 0) && dispatch(switchDices())}>switch</button>
             <div>
                 <div>
                     circles eaten:

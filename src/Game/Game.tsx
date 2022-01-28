@@ -1,10 +1,7 @@
-import React, { useMemo } from 'react';
-import classNames, { Argument } from 'classnames';
-import Circle from '@material-ui/icons/FiberManualRecord';
+import React from 'react';
 
 import { useGame } from './useGame';
-import { useStyles } from './GameStyles';
-import { Column } from '../models/Column';
+import { useStyles } from './Game.css';
 import { columnsSplit } from '../utils/utils';
 import { Player } from '../models/enums/Player';
 import { GameUtils } from './GameUtils/GameUtils';
@@ -13,8 +10,8 @@ import { GameColumn } from './GameColumn/GameColumn';
 const Game = () => {
     const classes = useStyles();
 
-    const { columns, turnPlayer, dices, circlesEaten,
-        turnPlayerNeedToReturn, onCircleClick, onColumnClick, switchDices } = useGame();
+    const { columns, turnPlayer, dices, circlesEaten, moves,
+        turnPlayerNeedToReturn, onCircleClick, onColumnClick } = useGame();
 
     return (
         <div className={classes.app}>
@@ -22,8 +19,8 @@ const Game = () => {
                 {...{
                     turnPlayer,
                     dices,
-                    switchDices,
-                    circlesEaten
+                    circlesEaten,
+                    moves
                 }}
             />
             <div className={classes.game}>

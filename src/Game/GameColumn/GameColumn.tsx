@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import classNames, { Argument } from 'classnames';
 // import Circle from '@material-ui/icons/FiberManualRecord';
 
@@ -21,6 +21,9 @@ export const GameColumn: React.FC<Props> = (props) => {
     const { column, index, onClick, _classNames, turnPlayerNeedToReturn, turnPlayer, onCircleClick } = props;
     const classes = useStyles();
 
+    const circlesClickable = useCallback((player: Player) => {
+        return !turnPlayerNeedToReturn && turnPlayer === player
+    }, [turnPlayerNeedToReturn, turnPlayer]);
 
     return (
         <div
@@ -30,25 +33,23 @@ export const GameColumn: React.FC<Props> = (props) => {
                 [classes.type2Column]: index % 2 !== 0,
             })}
         >
-            {Array.from({ length: column.circles[Player.PLAYER1] }).map((_, circleIndex) => (
-                <GameCircle
-                    key={circleIndex}
-                    className={classNames(
-                        classes.circle, classes.player1Circle,
-                        { [classes.clickable]: !turnPlayerNeedToReturn && turnPlayer === Player.PLAYER1 }
-                    )}
-                    onClick={() => !turnPlayerNeedToReturn && turnPlayer === Player.PLAYER1 && onCircleClick(index)}
-                />
-            ))}
-            {Array.from({ length: column.circles[Player.PLAYER2] }).map((_, circleIndex) => (
-                <GameCircle
-                    key={circleIndex}
-                    className={classNames(
-                        classes.circle, classes.player2Circle,
-                        { [classes.clickable]: !turnPlayerNeedToReturn && turnPlayer === Player.PLAYER2 }
-                    )}
-                    onClick={() => !turnPlayerNeedToReturn && turnPlayer === Player.PLAYER2 && onCircleClick(index)}
-                />
+            {[Player.PLAYER1, Player.PLAYER2].map(circlesPlayer => (
+                <>
+                    {Array.from({ length: column.circles[circlesPlayer] }).map((_, circleIndex) => (
+                        <GameCircle
+                            key={circleIndex}
+                            className={classNames(
+                                classes.circle,
+                                {
+                                    [classes.clickable]: circlesClickable(circlesPlayer),
+                                    [classes.player1Circle]: circlesPlayer === Player.PLAYER1,
+                                    [classes.player2Circle]: circlesPlayer === Player.PLAYER2,
+                                }
+                            )}
+                            onClick={() => circlesClickable(circlesPlayer) && onCircleClick(index)}
+                        />
+                    ))}
+                </>
             ))}
         </div>
     )

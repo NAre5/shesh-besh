@@ -5,7 +5,6 @@ interface Props {
     // key: React.Key;
     className: string | undefined;
     onClick: () => void;
-
 }
 
 export const GameCircle: React.FC<Props> = ({ className, onClick }) => {
@@ -20,7 +19,8 @@ export const GameCircle: React.FC<Props> = ({ className, onClick }) => {
     },[])
 
     return (
-        <Circle
+        // <Circle
+        <div
             {...{ className, onClick }}
         />
     )
