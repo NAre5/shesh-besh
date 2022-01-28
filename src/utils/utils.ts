@@ -1,5 +1,9 @@
+// import { v4 as uuidv4 } from 'uuid';
+import { Circle } from '../models/Circle';
+
 import { Column } from '../models/Column';
 import { Player } from '../models/enums/Player';
+
 
 export const getRandomDice = (): number => (
     Math.floor(Math.random() * 6 + 1)
@@ -21,6 +25,10 @@ export const columnsSplit = {
         hole: 0,
     },
 }
+
+// const generateCircles = (amount: number): Circle[] => (
+//     Array.from({ length: amount }).map(_ => ({ id: uuidv4() }))
+// );
 
 export const getInitialColumns = (): Column[] => {
     const initialColumns: Column[] = Array.from({ length: 26 }).map(

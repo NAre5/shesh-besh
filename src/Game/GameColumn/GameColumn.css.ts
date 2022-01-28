@@ -1,38 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 
 export const useStyles = makeStyles({
-  app: {
-    height: '100%',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  gameUtils: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  game: {
-    height: '100%',
-    width: '80%',
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: '#dbc18b',
-  },
-  divider: {
-    width: '3%'
-  },
-  player2Columns: {
-    height: '50%',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row-reverse',
-  },
-  player1Columns: {
-    height: '50%',
-    width: '100%',
-    display: 'flex',
-    alignItems: 'flex-end',
-  },
   column: {
     border: 'solid black',
     height: '94%',
@@ -41,12 +9,6 @@ export const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: 'gray',
-  },
-  topColumn: {
-    justifyContent: 'flex-start'
-  },  
-  bottomColumn: {
-    justifyContent: 'flex-end'
   },
   clickable: {
     '&:hover': {
@@ -93,12 +55,3 @@ export const useStyles = makeStyles({
   // mainDivider: {
   // },
 });
-
-// @keyframes App-logo-spin {
-//   from {
-//     transform: rotate(0deg);
-//   }
-//   to {
-//     transform: rotate(360deg);
-//   }
-// }

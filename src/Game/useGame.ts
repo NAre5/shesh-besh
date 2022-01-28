@@ -28,13 +28,13 @@ export const useGame = () => {
         [Player.PLAYER2]: columns[columnsSplit[Player.PLAYER1].hole].circles[Player.PLAYER2],
     }), [columns])
 
-    useEffect(() => {
-        console.log({ circlesEaten });
-    }, [circlesEaten])
+    // useEffect(() => {
+    //     console.log({ circlesEaten });
+    // }, [circlesEaten])
 
-    useEffect(() => {
-        console.log(dices);
-    }, [dices])
+    // useEffect(() => {
+    //     console.log(dices);
+    // }, [dices])
 
     // useEffect(() => {
     //     console.log(columns);
@@ -52,9 +52,9 @@ export const useGame = () => {
         circlesEaten[turnPlayer] > 0
     ), [circlesEaten, turnPlayer])
 
-    useEffect(() => {
-        console.log({ turnPlayerNeedToReturn });
-    }, [turnPlayerNeedToReturn])
+    // useEffect(() => {
+    //     console.log({ turnPlayerNeedToReturn });
+    // }, [turnPlayerNeedToReturn])
 
     // const currentTurn = useMemo<GameTurn>(() => ({
     //     turnPlayer,
