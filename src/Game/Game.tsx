@@ -12,17 +12,17 @@ const Game = () => {
     const classes = useStyles();
     const [hintedMove, setHintedMove] = useState<Move | undefined>(undefined);
 
-    const { columns, turnPlayer, dices, circlesEaten, moves, getMoveParams,
+    const { columns, turnPlayer, dices, circlesEaten, moves, getMoveParams, canResurrectCircleToPlayerColumn,
         turnPlayerNeedToReturn, onCircleClick, resurrectCircleToColumn, canResurrectCircleToColumns } = useGame();
 
-    const sharedGameColumnProps: Omit<GameColumnProps, 'index' | 'column' | 'resurrectCircle'> = {
+    const sharedGameColumnProps: Omit<GameColumnProps, 'index' | 'column' | 'canResurrectCircle'> = {
         turnPlayerNeedToReturn,
         turnPlayer,
         onCircleClick,
         getMoveParams,
         hintedMove,
         setHintedMove,
-        // resurrectCircleToColumn,
+        resurrectCircleToColumn,
         // circlesEaten
     };
 
@@ -48,11 +48,8 @@ const Game = () => {
                                 key={key}
                                 // playerSide={Player.PLAYER2}
                                 // isHome={true}
-                                resurrectCircle={() =>
-                                    (turnPlayer === Player.PLAYER1 && canResurrectCircleToColumns?.includes(key))
-                                        ? resurrectCircleToColumn(key)
-                                        : undefined
-                                }
+                                // canResurrectCircle={turnPlayer === Player.PLAYER1 && canResurrectCircleToColumns?.includes(key)}
+                                canResurrectCircle={canResurrectCircleToPlayerColumn(Player.PLAYER1, key)}
                                 _classNames={[classes.player2Column, {
                                     [classes.clickable]: turnPlayer === Player.PLAYER1 && canResurrectCircleToColumns?.includes(key)
                                 }]}
@@ -101,10 +98,8 @@ const Game = () => {
                                 key={key}
                                 // playerSide={Player.PLAYER1}
                                 // isHome={true}
-                                resurrectCircle={() => (turnPlayer === Player.PLAYER2 && canResurrectCircleToColumns?.includes(key))
-                                    ? resurrectCircleToColumn(key)
-                                    : undefined
-                                }
+                                // canResurrectCircle={turnPlayer === Player.PLAYER2 && canResurrectCircleToColumns?.includes(key)}
+                                canResurrectCircle={canResurrectCircleToPlayerColumn(Player.PLAYER2, key)}
                                 _classNames={[classes.player1Column, {
                                     [classes.clickable]: turnPlayer === Player.PLAYER2 && canResurrectCircleToColumns?.includes(key)
                                 }]}

@@ -137,6 +137,10 @@ export const useGame = () => {
             .map(_moveParams => _moveParams.endIndex);
     }, [turnPlayer, turnPlayerNeedToReturn, getMoveParams]);
 
+    const canResurrectCircleToPlayerColumn = useCallback((columnPlayer: Player, columnIndex: number) => (
+        turnPlayer === columnPlayer && canResurrectCircleToColumns?.includes(columnIndex)
+    ), [turnPlayer, canResurrectCircleToColumns]);
+
     const resurrectCircleToColumn = (selectedColumnIndex: number) => {
         console.log('column clicked');
 
@@ -161,7 +165,8 @@ export const useGame = () => {
         resurrectCircleToColumn,
         turnPlayerNeedToReturn,
         getMoveParams,
-        canResurrectCircleToColumns
+        canResurrectCircleToColumns,
+        canResurrectCircleToPlayerColumn
     }
 }
 

@@ -13,7 +13,8 @@ export interface Props {
     column: Column;
     index: number;
     // onClick?: (index: number) => void;
-    resurrectCircle?: () => void;
+    // resurrectCircle?: () => void;
+    canResurrectCircle?: boolean;
     _classNames?: Argument[];
     turnPlayerNeedToReturn: boolean;
     turnPlayer: Player;
@@ -26,13 +27,13 @@ export interface Props {
     setHintedMove: React.Dispatch<React.SetStateAction<Move | undefined>>;
     // playerSide: Player;
     // isHome: boolean;
-    // resurrectCircleToColumn: (endIndex: number) => void;
+    resurrectCircleToColumn: (selectedColumnIndex: number) => void
     // circlesEaten: MapPlayerTo<number>;
 }
 
 const GameColumn: React.FC<Props> = (props) => {
     const {
-        column, index, turnPlayerNeedToReturn, resurrectCircle, _classNames,
+        column, index, turnPlayerNeedToReturn, canResurrectCircle, _classNames, resurrectCircleToColumn,
         turnPlayer, onCircleClick, getMoveParams, setHintedMove, hintedMove
     } = props;
 
@@ -82,10 +83,10 @@ const GameColumn: React.FC<Props> = (props) => {
 
     return (
         <div
-            onClick={() => resurrectCircle && resurrectCircle()}
+            onClick={() => canResurrectCircle && resurrectCircleToColumn(index)}
             // onClick={() => canResurrectCircleToColumn && resurrectCircleToColumn(index)}
             className={classNames(classes.column, _classNames, {
-            // className={classNames(classes.column, {
+                // className={classNames(classes.column, {
                 [classes.type1Column]: index % 2 === 0,
                 [classes.type2Column]: index % 2 !== 0,
                 // [classes.player1Column]: playerSide === Player.PLAYER1,
