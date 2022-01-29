@@ -27,6 +27,9 @@ export const useStyles = makeStyles({
     justifyContent: 'center',
     borderRadius: '5px'
   },
+  usedDice: {
+    backgroundColor: 'gray',
+  },
   clickable: {
     cursor: 'pointer'
   },

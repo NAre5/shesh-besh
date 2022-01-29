@@ -6,7 +6,7 @@ import { useStyles } from './Game.css';
 import { columnsSplit } from '../utils/utils';
 import { Player } from '../models/enums/Player';
 import { GameUtils } from './GameUtils/GameUtils';
-import { GameColumn, Props as GameColumnProps } from './GameColumn/GameColumn';
+import GameColumn, { Props as GameColumnProps } from './GameColumn/GameColumn';
 
 const Game = () => {
     const classes = useStyles();
@@ -21,11 +21,8 @@ const Game = () => {
         onCircleClick,
         getMoveParams,
         hintedMove,
-        setHintedMove
+        setHintedMove,
     };
-
-    // console.log(123);
-
 
     return (
         <div className={classes.app}>

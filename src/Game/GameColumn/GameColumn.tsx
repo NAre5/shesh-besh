@@ -1,13 +1,12 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import classNames, { Argument } from 'classnames';
-// import Circle from '@material-ui/icons/FiberManualRecord';
 
-import { Column } from '../../models/Column';
-import { Player } from '../../models/enums/Player';
-import { useStyles } from './GameColumn.css'
-import { GameCircle } from '../GameCircle/GameCircle';
-import { columnsBoundries } from '../../utils/utils';
 import { Move } from '../../models/Move';
+import { Column } from '../../models/Column';
+import { useStyles } from './GameColumn.css';
+import GameCircle from '../GameCircle/GameCircle';
+import { Player } from '../../models/enums/Player';
+import { columnsBoundries } from '../../utils/utils';
 
 export interface Props {
     column: Column;
@@ -22,11 +21,15 @@ export interface Props {
         otherPlayerCirclesInDestination: number | undefined;
     };
     hintedMove: Move | undefined;
-    setHintedMove: React.Dispatch<React.SetStateAction<Move | undefined>>
+    setHintedMove: React.Dispatch<React.SetStateAction<Move | undefined>>;
 }
 
-export const GameColumn: React.FC<Props> = (props) => {
-    const { column, index, onClick, _classNames, turnPlayerNeedToReturn, turnPlayer, onCircleClick, getMoveParams, setHintedMove, hintedMove } = props;
+const GameColumn: React.FC<Props> = (props) => {
+    const {
+        column, index, onClick, _classNames, turnPlayerNeedToReturn,
+        turnPlayer, onCircleClick, getMoveParams, setHintedMove, hintedMove
+    } = props;
+    
     const classes = useStyles();
 
     const { endIndex, otherPlayerCirclesInDestination } = getMoveParams(index);
@@ -47,15 +50,13 @@ export const GameColumn: React.FC<Props> = (props) => {
         setHintedMove({ startIndex: index, endIndex });
     }
 
-    const onHoverEnd = () => {
-        setHintedMove(undefined);
+    const onHoverEnd = () => {        
+        !!hintedMove && setHintedMove(undefined);
     };
 
     const showHintedMove = useMemo<boolean>(() => (
         !!hintedMove && (hintedMove.endIndex === index)
     ), [hintedMove])
-
-    // console.log(456);
     
 
     return (
@@ -74,8 +75,8 @@ export const GameColumn: React.FC<Props> = (props) => {
                         [classes.disabled]: !circlesClickable(circlesPlayer),
                     })}
                     onClick={() => { if (circlesClickable(circlesPlayer)) { onCircleClick(index); onHoverEnd(); } }}
-                    onMouseEnter={() => circlesClickable(circlesPlayer) && onHoverEnter()}
-                    onMouseLeave={onHoverEnd}
+                    onMouseOver={() => circlesClickable(circlesPlayer) && onHoverEnter()}
+                    onMouseOut={onHoverEnd}
                 >
                     {Array.from({ length: column.circles[circlesPlayer] }).map((_, circleIndex) => (
                         <GameCircle
@@ -106,3 +107,5 @@ export const GameColumn: React.FC<Props> = (props) => {
         </div>
     )
 };
+
+export default memo(GameColumn);

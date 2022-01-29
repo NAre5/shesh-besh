@@ -57,6 +57,7 @@ const gameSlice = createSlice({
             // if (state.moves.length === 0)
             state.dices = [state.dices[1], state.dices[0]];
         },
+        // endTurn(state){}
         // setHintedMove(state, action: PayloadAction<Move>) {
         //     state.hintedMove = action.payload;
         // },

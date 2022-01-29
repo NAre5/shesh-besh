@@ -1,25 +1,13 @@
-import React, { } from 'react';
-// import Circle from '@material-ui/icons/FiberManualRecord';
+import React, { useEffect, memo } from 'react';
 
 interface Props {
     className: string | undefined;
 }
 
-export const GameCircle: React.FC<Props> = ({ className }) => {
+const GameCircle: React.FC<Props> = ({ className }) => (
+    <div
+        {...{ className }}
+    />
+)
 
-    // useEffect(()=>{
-    //     console.log('circle created');
-
-    //     return () =>{
-    //     console.log('circle unmounted');
-    //     }
-
-    // },[])
-
-    return (
-        // <Circle
-        <div
-            {...{ className }}
-        />
-    )
-}
+export default memo(GameCircle);

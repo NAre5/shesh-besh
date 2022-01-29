@@ -1,17 +1,15 @@
-import React from 'react';
 import classNames from 'classnames';
-// import Circle from '@material-ui/icons/FiberManualRecord';
+import React, { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 
+import { Move } from '../../models/Move';
 import { useStyles } from './GameUtils.css';
 import { Dices } from '../../models/GameTurn';
-import { Player } from '../../models/enums/Player';
-import { MapPlayerTo } from '../../models/MapPlayerTo';
-import { useStyles as useGameStlyes } from '../Game.css';
-import { switchDices } from '../../redux/Game.slice';
-import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../redux/store';
-import { Move } from '../../models/Move';
-import { GameCircle } from '../GameCircle/GameCircle';
+import { Player } from '../../models/enums/Player';
+import { switchDices } from '../../redux/Game.slice';
+import GameCircle from '../GameCircle/GameCircle';
+import { MapPlayerTo } from '../../models/MapPlayerTo';
 
 interface Props {
     turnPlayer: Player;
@@ -25,6 +23,11 @@ export const GameUtils: React.FC<Props> = (props) => {
     const classes = useStyles();
     const dispatch: AppDispatch = useDispatch();
 
+    const allowSwitchDices = useMemo<boolean>(() => (
+        dices[0] === dices[1]
+        || moves.length === 0
+        // && im the player
+    ), [dices, moves])
 
     return (
         <div className={classes.root}>
@@ -41,21 +44,25 @@ export const GameUtils: React.FC<Props> = (props) => {
                 {' turn'}
             </div>
             <div className={classes.row}>
-                {/* {'dices: ' + dices[0] + ' ' + dices[1]} */}
                 {'dices: '}
                 {dices.map((dice, index) =>
-                    <div className={classes.dice} key={index}>
+                    <div
+                        className={classNames(classes.dice, {
+                            [classes.usedDice]: moves.length >= (1 + index) * (dices[0] === dices[1] ? 2 : 1)
+                        })}
+                        key={index}
+                    >
                         {dice}
                     </div>
                 )}
             </div>
             <button
                 className={classNames({
-                    [classes.clickable]: moves.length === 0,
+                    [classes.clickable]: allowSwitchDices,
                     // [classes.disabled]: ,
                 })}
-                disabled={moves.length !== 0}
-                onClick={() => (moves.length === 0) && dispatch(switchDices())}
+                disabled={!allowSwitchDices}
+                onClick={() => dispatch(switchDices())}
             >
                 switch
             </button>

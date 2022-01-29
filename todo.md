@@ -23,3 +23,9 @@
 	[ ] סמן שמדגיש שאי אפשר ללחוץ על העיגול כי הסיומת שלו לא טובה
 	[ ] לנקות classים שלא השתמשו בהם ולמחוק כפילויות
 	[ ] refactor oncircleclick
+	
+##באגים ידועים:
+	[ ] אפשר ללחוץ עם האנטר להחליף קוביות אבל הhint לא משתנה
+	
+##אולי ישפר:
+	[ ] showHintedMove={showHintedMove(index + columnsSplit[Player.PLAYER1].homeStart)}
