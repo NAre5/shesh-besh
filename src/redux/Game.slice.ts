@@ -34,8 +34,9 @@ const gameSlice = createSlice({
         setColumns(state, action: PayloadAction<Column[]>) {
             state.columns = action.payload;
         },
-        addMove(state, action: PayloadAction<Move>) {
-            state.moves.push(action.payload);
+        addMove(state, action: PayloadAction<{ newMove: Move; newColumns: Column[] }>) {
+            state.moves.push(action.payload.newMove);
+            state.columns = action.payload.newColumns;
 
             // check if switchTurn
             const maxTurns = state.dices[0] === state.dices[1] ? 4 : 2;

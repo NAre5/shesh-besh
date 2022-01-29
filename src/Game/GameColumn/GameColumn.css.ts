@@ -12,6 +12,26 @@ export const useStyles = makeStyles({
     alignItems: 'center',
     backgroundColor: 'gray',
   },
+  // player2Column: {
+  //   borderBottomRightRadius: '50%',
+  //   borderBottomLeftRadius: '50%',
+  // },
+  // player1Column: {
+  //   // @ts-ignore
+  //   flexDirection: 'column-reverse!important',
+  //   borderTopRightRadius: '50%',
+  //   borderTopLeftRadius: '50%',
+  // },
+  player2Column: {
+    borderBottomRightRadius: '50%',
+    borderBottomLeftRadius: '50%',
+  },
+  player1Column: {
+    // @ts-ignore
+    flexDirection: 'column-reverse!important',
+    borderTopRightRadius: '50%',
+    borderTopLeftRadius: '50%',
+  },
   clickable: {
     cursor: 'pointer',
   },
