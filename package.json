@@ -2,8 +2,8 @@
   "name": "shesh-besh",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
     "start": "vite",
+    "typecheck": "tsc --watch",
     "build": "tsc && vite build",
     "serve": "vite preview"
   },

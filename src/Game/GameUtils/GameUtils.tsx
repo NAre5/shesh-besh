@@ -28,19 +28,43 @@ export const GameUtils: React.FC<Props> = (props) => {
 
     return (
         <div className={classes.root}>
-            <div>
-                {turnPlayer + ' turn'}
+            <div className={classes.row} >
+                {turnPlayer}
+                <GameCircle
+                    className={classNames(
+                        classes.circle, {
+                        [classes.player1Circle]: turnPlayer == Player.PLAYER1,
+                        [classes.player2Circle]: turnPlayer == Player.PLAYER2,
+                    }
+                    )}
+                />
+                {' turn'}
             </div>
-            <div>
-                {'dices: ' + dices[0] + ' ' + dices[1]}
+            <div className={classes.row}>
+                {/* {'dices: ' + dices[0] + ' ' + dices[1]} */}
+                {'dices: '}
+                {dices.map((dice, index) =>
+                    <div className={classes.dice} key={index}>
+                        {dice}
+                    </div>
+                )}
             </div>
-            <button onClick={() => (moves.length === 0) && dispatch(switchDices())}>switch</button>
-            <div>
-                <div>
-                    circles eaten:
+            <button
+                className={classNames({
+                    [classes.clickable]: moves.length === 0,
+                    // [classes.disabled]: ,
+                })}
+                disabled={moves.length !== 0}
+                onClick={() => (moves.length === 0) && dispatch(switchDices())}
+            >
+                switch
+            </button>
+            <div className={classes.circlesEaten}>
+                <div className={classes.circlesEatenTitle}>
+                    circles eaten
                 </div>
                 {[Player.PLAYER1, Player.PLAYER2].map(circlesPlayer => (
-                    <div className={classes.circleCount} key={circlesPlayer}>
+                    <div className={classes.row} key={circlesPlayer}>
                         {circlesPlayer}
                         <GameCircle
                             className={classNames(

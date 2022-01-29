@@ -4,11 +4,41 @@ export const useStyles = makeStyles({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    paddingRight: 10
+    padding: 15,
+    '& *': {
+      fontWeight: 600,
+    },
+    width: 120,
   },
-  circleCount: {
+  row: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    border: '2px solid black',
+    margin: '5px 0',
+    padding: '2px'
+  },
+  dice: {
+    backgroundColor: 'white',
+    margin: 2,
+    height: 20,
+    width: 20,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '5px'
+  },
+  clickable: {
+    cursor: 'pointer'
+  },
+  disabled: {
+    cursor: 'not-allowed'
+  },
+  circlesEaten: {
+    marginTop: 10
+  },
+  circlesEatenTitle: {
+    textDecoration: 'underline'
+    // border: '2px solid black'
   },
   circle: {
     width: '10px',

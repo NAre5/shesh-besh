@@ -5,7 +5,7 @@ export const useStyles = makeStyles({
     height: '100%',
     width: '100%',
     display: 'flex',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     backgroundColor: 'cadetblue'
   },
   gameUtils: {
