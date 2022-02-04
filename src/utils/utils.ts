@@ -51,7 +51,7 @@ const isBetween = (n: number, start: number, end: number): boolean => (
 )
 
 export const isColumnInHome = (player: Player, columnId: number): boolean => (
-    isBetween(columnId, columnsSplit[player].homeStart, columnsSplit[player].homeEnd)
+    isBetween(columnId, columnsSplit[player].homeStart, columnsSplit[player].hole)
 );
 
 export const playerDirection: { [key in Player]: number } = {
@@ -72,14 +72,23 @@ export const getInitialColumns = (): Column[] => {
             }
         })
     );
-    initialColumns[columnsSplit[Player.PLAYER2].homeEnd].circles[Player.PLAYER1] = 2;
-    initialColumns[columnsSplit[Player.PLAYER2].homeStart].circles[Player.PLAYER2] = 5;
-    initialColumns[columnsSplit[Player.PLAYER2].outerEnd + 1].circles[Player.PLAYER2] = 3;
-    initialColumns[columnsSplit[Player.PLAYER2].outerStart].circles[Player.PLAYER1] = 5;
-    initialColumns[columnsSplit[Player.PLAYER1].outerStart].circles[Player.PLAYER2] = 5;
-    initialColumns[columnsSplit[Player.PLAYER1].outerEnd - 1].circles[Player.PLAYER1] = 3;
-    initialColumns[columnsSplit[Player.PLAYER1].homeStart].circles[Player.PLAYER1] = 5;
-    initialColumns[columnsSplit[Player.PLAYER1].homeEnd].circles[Player.PLAYER2] = 2;
+    // initialColumns[columnsSplit[Player.PLAYER2].homeEnd].circles[Player.PLAYER1] = 2;
+    initialColumns[columnsSplit[Player.PLAYER2].homeStart].circles[Player.PLAYER2] = 1;
+    // initialColumns[columnsSplit[Player.PLAYER2].outerEnd + 1].circles[Player.PLAYER2] = 3;
+    // initialColumns[columnsSplit[Player.PLAYER2].outerStart].circles[Player.PLAYER1] = 5;
+    // initialColumns[columnsSplit[Player.PLAYER1].outerStart].circles[Player.PLAYER2] = 5;
+    // initialColumns[columnsSplit[Player.PLAYER1].outerEnd - 1].circles[Player.PLAYER1] = 3;
+    initialColumns[columnsSplit[Player.PLAYER1].homeStart].circles[Player.PLAYER1] = 1;
+    // initialColumns[columnsSplit[Player.PLAYER1].homeEnd].circles[Player.PLAYER2] = 2;
+    
+    // initialColumns[columnsSplit[Player.PLAYER2].homeEnd].circles[Player.PLAYER1] = 2;
+    // initialColumns[columnsSplit[Player.PLAYER2].homeStart].circles[Player.PLAYER2] = 5;
+    // initialColumns[columnsSplit[Player.PLAYER2].outerEnd + 1].circles[Player.PLAYER2] = 3;
+    // initialColumns[columnsSplit[Player.PLAYER2].outerStart].circles[Player.PLAYER1] = 5;
+    // initialColumns[columnsSplit[Player.PLAYER1].outerStart].circles[Player.PLAYER2] = 5;
+    // initialColumns[columnsSplit[Player.PLAYER1].outerEnd - 1].circles[Player.PLAYER1] = 3;
+    // initialColumns[columnsSplit[Player.PLAYER1].homeStart].circles[Player.PLAYER1] = 5;
+    // initialColumns[columnsSplit[Player.PLAYER1].homeEnd].circles[Player.PLAYER2] = 2;
 
     return initialColumns;
 };

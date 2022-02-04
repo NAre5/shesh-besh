@@ -22,26 +22,32 @@ interface Props {
     dices: Dices;
     circlesEaten: MapPlayerTo<number>;
     moves: Move[];
+    gameEnded: boolean;
 }
 
 export const GameUtils: React.FC<Props> = (props) => {
-    const { turnPlayer, dices, circlesEaten, moves } = props;
+    const { turnPlayer, dices, circlesEaten, moves, gameEnded } = props;
     const classes = useStyles();
     const dispatch: AppDispatch = useDispatch();
 
     const allowSwapDices = useMemo<boolean>(() => (
-        dices[0] === dices[1]
-        || moves.length === 0
+        (
+            (dices[0] === dices[1])
+            || (moves.length === 0)
+        )
+        && !gameEnded
         //TODO: && im the player
     ), [dices, moves]);
 
     const allowUndoMove = useMemo<boolean>(() => (
-        moves.length !== 0
+        (moves.length !== 0)
+        && !gameEnded
         //TODO:  && im the player
     ), [dices, moves]);
 
     const allowEndTurn = useMemo<boolean>(() => (
-        moves.length === (dices[0] === dices[1] ? 4 : 2)
+        (moves.length === (dices[0] === dices[1] ? 4 : 2))
+        && !gameEnded
         //TODO:  && im the player
     ), [dices, moves]);
 
@@ -110,6 +116,9 @@ export const GameUtils: React.FC<Props> = (props) => {
                     </div>
                 ))}
             </div>
+            {gameEnded &&
+                <div>Game Ended!</div>
+            }
         </div>
     )
 }

@@ -12,17 +12,18 @@ const Game = () => {
     const classes = useStyles();
     const [hintedMove, setHintedMove] = useState<Move | undefined>(undefined);
 
-    const { columns, turnPlayer, dices, circlesEaten, moves, getMoveParams, canResurrectCircleToPlayerColumn,
-        turnPlayerNeedToReturn, onCircleClick, resurrectCircleToColumn, canResurrectCircleToColumns } = useGame();
+    const { columns, turnPlayer, dices, circlesEaten, moves, possibleMoves, canResurrectCircleToColumns, canResurrectCircleToPlayerColumn,
+        turnPlayerNeedToReturn, onCircleClick, resurrectCircleToColumn, currDiceIdx, gameEnded} = useGame();
 
     const sharedGameColumnProps: Omit<GameColumnProps, 'index' | 'column' | 'canResurrectCircle'> = {
         turnPlayerNeedToReturn,
         turnPlayer,
         onCircleClick,
-        getMoveParams,
         hintedMove,
         setHintedMove,
+        possibleMoves,
         resurrectCircleToColumn,
+        currDiceIdx
         // circlesEaten
     };
 
@@ -33,7 +34,8 @@ const Game = () => {
                     turnPlayer,
                     dices,
                     circlesEaten,
-                    moves
+                    moves,
+                    gameEnded
                 }}
             />
             <div className={classes.game}>

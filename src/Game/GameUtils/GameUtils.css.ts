@@ -37,7 +37,7 @@ export const useStyles = makeStyles({
     cursor: 'not-allowed'
   },
   circlesEaten: {
-    marginTop: 10
+    margin: '10px 0'
   },
   circlesEatenTitle: {
     textDecoration: 'underline'

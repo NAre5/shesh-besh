@@ -53,6 +53,7 @@ const gameSlice = createSlice({
             state.turnHistory = [];
             // return to turn's intitial column state
         },
+        //TODO: maybe remove and add dices-direction to reduce renders
         swapDices(state) {
             // if (state.moves.length === 0)
             state.dices = [state.dices[1], state.dices[0]];

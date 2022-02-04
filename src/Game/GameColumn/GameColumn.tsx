@@ -7,6 +7,7 @@ import { useStyles } from './GameColumn.css';
 import GameCircle from '../GameCircle/GameCircle';
 import { Player } from '../../models/enums/Player';
 import { columnsBoundries } from '../../utils/utils';
+import { PossibleMove } from '../../models/PossibleMove';
 
 export interface Props {
     column: Column;
@@ -18,42 +19,40 @@ export interface Props {
     turnPlayerNeedToReturn: boolean;
     turnPlayer: Player;
     onCircleClick: (selectedColumnIndex: number, diceIndex?: 0 | 1) => void;
-    getMoveParams: (startIndex: number, diceIndex?: 0 | 1 | undefined) => {
-        endIndex: number;
-        otherPlayerCirclesInDestination: number | undefined;
-    };
+    // getMoveParams: (startIndex: number, diceIndex?: 0 | 1 | undefined) => {
+    //     endIndex: number;
+    //     otherPlayerCirclesInDestination: number | undefined;
+    // };
     hintedMove: Move | undefined;
     setHintedMove: React.Dispatch<React.SetStateAction<Move | undefined>>;
     // playerSide: Player;
     // isHome: boolean;
     resurrectCircleToColumn: (selectedColumnIndex: number) => void
     // circlesEaten: MapPlayerTo<number>;
+    possibleMoves: PossibleMove[];
+    currDiceIdx: number;
 }
 
 const GameColumn: React.FC<Props> = (props) => {
     const {
-        column, index, turnPlayerNeedToReturn, canResurrectCircle, _classNames, resurrectCircleToColumn,
-        turnPlayer, onCircleClick, getMoveParams, setHintedMove, hintedMove
+        column, index, turnPlayerNeedToReturn, canResurrectCircle, _classNames, possibleMoves,
+        turnPlayer, onCircleClick, setHintedMove, hintedMove, resurrectCircleToColumn, currDiceIdx
     } = props;
 
     const classes = useStyles();
 
-    const { endIndex, otherPlayerCirclesInDestination } = getMoveParams(index);
+    const possibleMoveFromColumn = useMemo<PossibleMove | undefined>(() => (
+        possibleMoves.find(possibleMove => possibleMove.startIndex === index && possibleMove.diceIdx === currDiceIdx)
+    ), [possibleMoves, currDiceIdx]);
 
     const circlesClickable = (player: Player) => {
-        //TODO: if end index is one of ends colunms
-        //TODO: if end index is passed hole column
-
         return !turnPlayerNeedToReturn
             && (turnPlayer === player)
-            && !((((endIndex === columnsBoundries.min) || (endIndex === columnsBoundries.max)) ||
-                (otherPlayerCirclesInDestination === undefined) ||
-                (otherPlayerCirclesInDestination > 1)))
-        // }
+            && possibleMoveFromColumn
     };
 
     const onHoverEnter = () => {
-        setHintedMove({ startIndex: index, endIndex, circleEaten: otherPlayerCirclesInDestination === 1 });
+        possibleMoveFromColumn && setHintedMove({ ...possibleMoveFromColumn });
     }
 
     const onHoverEnd = () => {
@@ -83,7 +82,6 @@ const GameColumn: React.FC<Props> = (props) => {
     return (
         <div
             onClick={() => canResurrectCircle && resurrectCircleToColumn(index)}
-            // onClick={() => canResurrectCircleToColumn && resurrectCircleToColumn(index)}
             className={classNames(classes.column, _classNames, {
                 // className={classNames(classes.column, {
                 [classes.type1Column]: index % 2 === 0,
