@@ -4,6 +4,7 @@
 import { Column } from '../models/Column';
 import { Player } from '../models/enums/Player';
 
+export const diceIdxs: (0 | 1)[] = [0, 1];
 
 export const getRandomDice = (): number => (
     Math.floor(Math.random() * 6 + 1)
@@ -26,16 +27,25 @@ export const columnsSplit = {
     },
 };
 
+export const columnsBoundries = {
+    min: Math.min(columnsSplit[Player.PLAYER1].hole, columnsSplit[Player.PLAYER2].hole),
+    max: Math.max(columnsSplit[Player.PLAYER1].hole, columnsSplit[Player.PLAYER2].hole),
+}
+
+export const isGameColumn = (columnId: number): boolean => (
+    (columnId < columnsBoundries.max) && (columnId > columnsBoundries.min)
+);
+
+export const isGameHole = (columnId: number) => (
+    (columnId === columnsBoundries.max) || (columnId === columnsBoundries.min)
+);
+
 export const getOtherPlayer = (player: Player): Player => (
     player === Player.PLAYER1
         ? Player.PLAYER2
         : Player.PLAYER1
 );
 
-export const columnsBoundries = {
-    min: 0,
-    max: 25
-}
 
 export const playerDirection: { [key in Player]: number } = {
     [Player.PLAYER1]: 1,

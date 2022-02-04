@@ -3,6 +3,10 @@ import { makeStyles } from '@material-ui/core';
 const HINTED_CIRCLE_OPACITY = 0.5;
 
 export const useStyles = makeStyles({
+  columnIdx: {
+    color: 'gray',
+    fontSize: '10px'
+  },
   column: {
     border: 'solid black',
     height: '94%',
@@ -32,6 +36,12 @@ export const useStyles = makeStyles({
     borderTopRightRadius: '50%',
     borderTopLeftRadius: '50%',
   },
+  circlesArea: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
   clickable: {
     cursor: 'pointer',
   },
@@ -47,13 +57,14 @@ export const useStyles = makeStyles({
     // backgroundColor: 'rgba(0,0,0,0.85)',
   },
   circle: {
-    width: 'min(7vh, 7vw)',
+    // width: 'min(7vh, 7vw)',
+    width: 'min(7vh, 7vw, 100%)',
     height: 'min(7vh, 7vw)',
     // border: 'solid 1px gray',
     // transition: 'all 5s linear'
     // backgroundColor: '#bbb',
     borderRadius: '50%',
-    margin: 'min(0.5vh, 0.5vw)'
+    margin: 'min(0.5vh, 0.5vw) 0'
     // display: 'inline-block',
   },
   player1Circle: {

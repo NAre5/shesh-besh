@@ -1,7 +1,8 @@
 // import { Player } from './enums/Player';
 
-export interface Move {
+export interface PossibleMove {
     startIndex: number;
     endIndex: number;
+    diceIdx: 0 | 1;
     // circleEaten?: boolean;
 }

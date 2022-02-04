@@ -3,7 +3,7 @@ import { Column } from '../models/Column'
 import { Player } from '../models/enums/Player'
 import { Dices } from '../models/GameTurn'
 import { Move } from '../models/Move'
-import { getInitialColumns, getRandomDice } from '../utils/utils'
+import { getInitialColumns, getOtherPlayer, getRandomDice } from '../utils/utils'
 
 // const [playersName, setPlayersName] = useState<MapPlayerTo<string>>({//TODO: make playerName changable
 //     [Player.PLAYER1]: 'naruto',
@@ -13,8 +13,10 @@ import { getInitialColumns, getRandomDice } from '../utils/utils'
 
 export interface GameState {
     turnPlayer: Player;
+    // players: {[T in Player]: User} 
     columns: Column[];
     moves: Move[];
+    // turnHistory or change Move interface and logic aco
     dices: Dices;
     // hintedMove: undefined | Move;//TODO: rethink should be in slice
 }
@@ -37,28 +39,32 @@ const gameSlice = createSlice({
         addMove(state, action: PayloadAction<{ newMove: Move; newColumns: Column[] }>) {
             state.moves.push(action.payload.newMove);
             state.columns = action.payload.newColumns;
-
-            // check if switchTurn
-            const maxTurns = state.dices[0] === state.dices[1] ? 4 : 2;
-            if (state.moves.length === maxTurns) {
-                state.turnPlayer = state.turnPlayer === Player.PLAYER1
-                    ? Player.PLAYER2
-                    : Player.PLAYER1
-                state.moves = [];
-                state.dices = [getRandomDice(), getRandomDice()];
-            }
         },
         undoMove(state) {
             state.moves.pop();
+            // return to previous column state
         },
         resetMoves(state) {
             state.moves = [];
+            // return to turn's intitial column state
         },
-        switchDices(state) {
+        swapDices(state) {
             // if (state.moves.length === 0)
             state.dices = [state.dices[1], state.dices[0]];
         },
-        // endTurn(state){}
+        switchTurns(state) {
+            // check if can switchTurn
+            // const maxTurns = state.dices[0] === state.dices[1] ? 4 : 2;
+            // if (state.moves.length === maxTurns) {
+
+            state.turnPlayer = getOtherPlayer(state.turnPlayer);
+            state.moves = [];
+            state.dices = [getRandomDice(), getRandomDice()];
+            // }
+            // else {
+            // undo if done moves
+            // }
+        }
         // setHintedMove(state, action: PayloadAction<Move>) {
         //     state.hintedMove = action.payload;
         // },
@@ -74,5 +80,5 @@ const gameSlice = createSlice({
     },
 })
 
-export const { setColumns, addMove, resetMoves, undoMove, switchDices } = gameSlice.actions
+export const { setColumns, addMove, resetMoves, undoMove, swapDices, switchTurns } = gameSlice.actions
 export const gameReducer = gameSlice.reducer

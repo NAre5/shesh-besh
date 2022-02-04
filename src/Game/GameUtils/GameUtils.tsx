@@ -7,9 +7,15 @@ import { useStyles } from './GameUtils.css';
 import { Dices } from '../../models/GameTurn';
 import { AppDispatch } from '../../redux/store';
 import { Player } from '../../models/enums/Player';
-import { switchDices } from '../../redux/Game.slice';
 import GameCircle from '../GameCircle/GameCircle';
 import { MapPlayerTo } from '../../models/MapPlayerTo';
+import { swapDices, switchTurns, undoMove } from '../../redux/Game.slice';
+
+interface UtilsButton {
+    title: string;
+    enabled: boolean;
+    onClick: () => void;
+}
 
 interface Props {
     turnPlayer: Player;
@@ -23,11 +29,27 @@ export const GameUtils: React.FC<Props> = (props) => {
     const classes = useStyles();
     const dispatch: AppDispatch = useDispatch();
 
-    const allowSwitchDices = useMemo<boolean>(() => (
+    const allowSwapDices = useMemo<boolean>(() => (
         dices[0] === dices[1]
         || moves.length === 0
-        // && im the player
-    ), [dices, moves])
+        //TODO: && im the player
+    ), [dices, moves]);
+
+    const allowUndoMove = useMemo<boolean>(() => (
+        moves.length !== 0
+        //TODO:  && im the player
+    ), [dices, moves]);
+
+    const allowEndTurn = useMemo<boolean>(() => (
+        moves.length === (dices[0] === dices[1] ? 4 : 2)
+        //TODO:  && im the player
+    ), [dices, moves]);
+
+    const utilButtons: UtilsButton[] = [
+        { title: 'Swap Dices', enabled: allowSwapDices, onClick: () => dispatch(swapDices()) },
+        { title: 'Undo Move', enabled: allowUndoMove, onClick: () => dispatch(undoMove()) },
+        { title: 'End Turn', enabled: allowEndTurn, onClick: () => dispatch(switchTurns()) },
+    ]
 
     return (
         <div className={classes.root}>
@@ -56,16 +78,16 @@ export const GameUtils: React.FC<Props> = (props) => {
                     </div>
                 )}
             </div>
-            <button
-                className={classNames({
-                    [classes.clickable]: allowSwitchDices,
-                    // [classes.disabled]: ,
-                })}
-                disabled={!allowSwitchDices}
-                onClick={() => dispatch(switchDices())}
-            >
-                switch
-            </button>
+            {utilButtons.map(utilButton => (
+                <button
+                    className={classNames({ [classes.clickable]: utilButton.enabled })}
+                    disabled={!utilButton.enabled}
+                    onClick={utilButton.onClick}
+                >
+                    {utilButton.title}
+                </button>
+            ))
+            }
             <div className={classes.circlesEaten}>
                 <div className={classes.circlesEatenTitle}>
                     circles eaten

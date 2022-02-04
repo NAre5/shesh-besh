@@ -93,33 +93,35 @@ const GameColumn: React.FC<Props> = (props) => {
                 // [classes.player2Column]: playerSide === Player.PLAYER2,
             })}
         >
+            <div className={classes.columnIdx}>{index}</div>
             {[Player.PLAYER1, Player.PLAYER2].map(circlesPlayer => (
-                <div
-                    key={circlesPlayer}
-                    className={classNames({
-                        [classes.clickable]: circlesClickable(circlesPlayer),
-                        [classes.disabled]: !circlesClickable(circlesPlayer),
-                    })}
-                    onClick={() => { if (circlesClickable(circlesPlayer)) { onCircleClick(index); onHoverEnd(); } }}
-                    onMouseOver={() => circlesClickable(circlesPlayer) && onHoverEnter()}
-                    onMouseOut={onHoverEnd}
-                >
-                    {Array.from({ length: column.circles[circlesPlayer] }).map((_, circleIndex) => (
-                        <GameCircle
-                            key={circleIndex}
-                            className={classNames(
-                                classes.circle,
-                                {
-                                    [classes.player1Circle]: circlesPlayer === Player.PLAYER1,
-                                    [classes.player2Circle]: circlesPlayer === Player.PLAYER2,
-                                }
-                            )}
-                        />
-                    ))}
-                </div>
+                !column.circles[circlesPlayer]
+                    ? <></>
+                    : <div
+                        key={circlesPlayer}
+                        className={classNames(classes.circlesArea, {
+                            [classes.clickable]: circlesClickable(circlesPlayer),
+                            [classes.disabled]: !circlesClickable(circlesPlayer),
+                        })}
+                        onClick={() => { if (circlesClickable(circlesPlayer)) { onCircleClick(index); onHoverEnd(); } }}
+                        onMouseOver={() => circlesClickable(circlesPlayer) && onHoverEnter()}
+                        onMouseOut={onHoverEnd}
+                    >
+                        {Array.from({ length: column.circles[circlesPlayer] }).map((_, circleIndex) => (
+                            <GameCircle
+                                key={circleIndex}
+                                className={classNames(
+                                    classes.circle,
+                                    {
+                                        [classes.player1Circle]: circlesPlayer === Player.PLAYER1,
+                                        [classes.player2Circle]: circlesPlayer === Player.PLAYER2,
+                                    }
+                                )}
+                            />
+                        ))}
+                    </div>
             ))}
-            {
-                showHintedMove &&
+            {showHintedMove &&
                 <GameCircle
                     className={classNames(
                         classes.circle,

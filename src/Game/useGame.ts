@@ -5,9 +5,10 @@ import { Move } from '../models/Move';
 import { Column } from '../models/Column';
 import { Player } from '../models/enums/Player';
 import { MapPlayerTo } from '../models/MapPlayerTo';
+import { PossibleMove } from '../models/PossibleMove';
 import { AppDispatch, StoreState } from '../redux/store';
-import { addMove, GameState, setColumns, switchDices } from '../redux/Game.slice';
-import { columnsBoundries, columnsSplit, getOtherPlayer, playerDirection } from '../utils/utils';
+import { addMove, GameState, swapDices } from '../redux/Game.slice';
+import { columnsBoundries, columnsSplit, diceIdxs, getOtherPlayer, isGameColumn, playerDirection } from '../utils/utils';
 
 export const useGame = () => {
     //#region states 
@@ -33,21 +34,52 @@ export const useGame = () => {
     const turnPlayerNeedToReturn = useMemo<boolean>(() => (
         circlesEaten[turnPlayer] > 0
     ), [circlesEaten, turnPlayer]);
-    //#endregion
 
     const getMoveParams = useCallback((startIndex: number, diceIndex?: 0 | 1) => {
-        const currentDice = (diceIndex !== undefined) ? dices[diceIndex] : (isDicesDouble ? dices[0] : dices[moves.length]);
+        const currentDice = (diceIndex !== undefined)
+            ? dices[diceIndex]
+            : (isDicesDouble ? dices[0] : dices[moves.length]);
         const endIndex = startIndex + playerDirection[turnPlayer] * currentDice;
-        const otherPlayerCirclesInDestination = ((endIndex > columnsBoundries.max) || (endIndex < columnsBoundries.min))
-            ? undefined
-            : columns[endIndex].circles[otherPlayer];
+        const otherPlayerCirclesInDestination =
+            !isGameColumn(endIndex)
+                ? undefined
+                : columns[endIndex].circles[otherPlayer];
 
         return { endIndex, otherPlayerCirclesInDestination };
-    }, [isDicesDouble, dices, turnPlayer, otherPlayer, columns])
+    }, [isDicesDouble, dices, turnPlayer, otherPlayer, columns]);
+    //TODO: maybe include useRefs like Ben Awad did
+
+    const turnPlayerColumnsIds = useMemo<number[]>(() => (
+        columns
+            .map((column, index) => ({ ...column, index }))
+            .filter(column => column.circles[turnPlayer] > 0)
+            .map(column => column.index)
+    ), [columns, turnPlayer]);
+
+    // const possibleMoves = useMemo<{ [diceIndex in 0 | 1]: { startIndex: number }[] }>(() => {
+    const possibleMoves = useMemo<PossibleMove[]>(() => {
+        // include double situation
+        return turnPlayerColumnsIds.reduce<PossibleMove[]>((currPossibleMoves, columnId) => {
+            diceIdxs.forEach(diceIdx => {
+                const { endIndex, otherPlayerCirclesInDestination } = getMoveParams(columnId, diceIdx);
+
+                // if (isGameColumn(endIndex))
+                if (otherPlayerCirclesInDestination !== undefined && otherPlayerCirclesInDestination <= 1)
+                    currPossibleMoves.push({ startIndex: columnId, diceIdx, endIndex })
+            })
+            return currPossibleMoves;
+        }, [])
+    }, [turnPlayerColumnsIds, getMoveParams]);
+
+    const possibleEndColumns = useMemo<number[]>(() => {
+        return possibleMoves.map(possibleMove => possibleMove.endIndex)
+    }, [possibleMoves])
+    
+    // const myTurn = useMemo<boolean>(()=>turnPlayer === Players[myUserId])
+
+    //#endregion
 
     const onCircleClick = (selectedColumnIndex: number, diceIndex?: 0 | 1) => {
-
-        // console.log('start good');
 
         // const currentDice = isDicesDouble ? dices[0] : dices[moves.length];
         // const endIndex = selectedColumnIndex + playerDirection[turnPlayer] * currentDice;
@@ -67,8 +99,6 @@ export const useGame = () => {
         // if (endIndex === columnsBoundries.min || endIndex === columnsBoundries.max) return;
         // if (otherPlayerCirclesInDestination === undefined) return;
         // if (otherPlayerCirclesInDestination > 1) return;
-
-        // console.log('end good');
 
         const newMove: Move = {
             startIndex: selectedColumnIndex,
@@ -92,7 +122,6 @@ export const useGame = () => {
             } as MapPlayerTo<number>
         };
 
-
         const isEatMove = otherPlayerCirclesInDestination === 1;
         if (isEatMove) {
             newColumns[newMove.endIndex] = {
@@ -103,22 +132,16 @@ export const useGame = () => {
             };
 
             const turnPlayerHoleColumn = columns[columnsSplit[turnPlayer].hole]
-            // console.log({
-            //     previousOtherPlayerHoleColumn: turnPlayerHoleColumn
-            // });
             newColumns[columnsSplit[turnPlayer].hole] = {
                 circles: {
                     [turnPlayer]: turnPlayerHoleColumn.circles[turnPlayer],
                     [otherPlayer]: turnPlayerHoleColumn.circles[otherPlayer] + 1,
                 } as MapPlayerTo<number>
             }
-            // console.log({
-            //     laterOtherPlayerHoleColumn: newColumns[columnsSplit[otherPlayer].hole]
-            // });
         }
 
         if (diceIndex !== undefined && !isDicesDouble && diceIndex !== moves.length)
-            dispatch(switchDices());
+            dispatch(swapDices());
 
         dispatch(addMove({ newMove, newColumns }));
 
@@ -153,7 +176,7 @@ export const useGame = () => {
         onCircleClick(columnsSplit[otherPlayer].hole, usedDice);
     }
 
-    // const onCircleHover
+    // useEffect ((len(moves) == 0) && (len(possibleMoves) == 0)) => switchTurn
 
     return {
         turnPlayer,
