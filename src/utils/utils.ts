@@ -46,6 +46,13 @@ export const getOtherPlayer = (player: Player): Player => (
         : Player.PLAYER1
 );
 
+const isBetween = (n: number, start: number, end: number): boolean => (
+    (n >= start && n <= end) || (n <= start && n >= end)
+)
+
+export const isColumnInHome = (player: Player, columnId: number): boolean => (
+    isBetween(columnId, columnsSplit[player].homeStart, columnsSplit[player].homeEnd)
+);
 
 export const playerDirection: { [key in Player]: number } = {
     [Player.PLAYER1]: 1,

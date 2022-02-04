@@ -13,10 +13,10 @@ import { getInitialColumns, getOtherPlayer, getRandomDice } from '../utils/utils
 
 export interface GameState {
     turnPlayer: Player;
-    // players: {[T in Player]: User} 
+    //TODO: players: {[T in Player]: User} 
     columns: Column[];
     moves: Move[];
-    // turnHistory or change Move interface and logic aco
+    turnHistory: Column[][];//TODO: or change Move interface and logic aco
     dices: Dices;
     // hintedMove: undefined | Move;//TODO: rethink should be in slice
 }
@@ -25,6 +25,7 @@ const initialState: GameState = {
     turnPlayer: Player.PLAYER1,
     columns: getInitialColumns(),
     moves: [],
+    turnHistory: [],
     dices: [getRandomDice(), getRandomDice()],
     // hintedMove: undefined,
 };
@@ -33,19 +34,23 @@ const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        setColumns(state, action: PayloadAction<Column[]>) {
-            state.columns = action.payload;
-        },
         addMove(state, action: PayloadAction<{ newMove: Move; newColumns: Column[] }>) {
             state.moves.push(action.payload.newMove);
+            state.turnHistory.push(state.columns);
             state.columns = action.payload.newColumns;
         },
         undoMove(state) {
+            if (!state.moves.length) return;
             state.moves.pop();
             // return to previous column state
+            state.columns = state.turnHistory.pop()!;
         },
         resetMoves(state) {
+            if (!state.moves.length) return;
+
+            state.columns = state.turnHistory[0];
             state.moves = [];
+            state.turnHistory = [];
             // return to turn's intitial column state
         },
         swapDices(state) {
@@ -59,6 +64,7 @@ const gameSlice = createSlice({
 
             state.turnPlayer = getOtherPlayer(state.turnPlayer);
             state.moves = [];
+            state.turnHistory = [];
             state.dices = [getRandomDice(), getRandomDice()];
             // }
             // else {
@@ -80,5 +86,5 @@ const gameSlice = createSlice({
     },
 })
 
-export const { setColumns, addMove, resetMoves, undoMove, swapDices, switchTurns } = gameSlice.actions
+export const { addMove, resetMoves, undoMove, swapDices, switchTurns } = gameSlice.actions
 export const gameReducer = gameSlice.reducer

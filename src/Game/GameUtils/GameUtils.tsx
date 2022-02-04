@@ -9,7 +9,7 @@ import { AppDispatch } from '../../redux/store';
 import { Player } from '../../models/enums/Player';
 import GameCircle from '../GameCircle/GameCircle';
 import { MapPlayerTo } from '../../models/MapPlayerTo';
-import { swapDices, switchTurns, undoMove } from '../../redux/Game.slice';
+import { resetMoves, swapDices, switchTurns, undoMove } from '../../redux/Game.slice';
 
 interface UtilsButton {
     title: string;
@@ -48,6 +48,7 @@ export const GameUtils: React.FC<Props> = (props) => {
     const utilButtons: UtilsButton[] = [
         { title: 'Swap Dices', enabled: allowSwapDices, onClick: () => dispatch(swapDices()) },
         { title: 'Undo Move', enabled: allowUndoMove, onClick: () => dispatch(undoMove()) },
+        { title: 'Reset Moves', enabled: allowUndoMove, onClick: () => dispatch(resetMoves()) },
         { title: 'End Turn', enabled: allowEndTurn, onClick: () => dispatch(switchTurns()) },
     ]
 
@@ -78,13 +79,14 @@ export const GameUtils: React.FC<Props> = (props) => {
                     </div>
                 )}
             </div>
-            {utilButtons.map(utilButton => (
+            {utilButtons.map(({ title, enabled, onClick }) => (
                 <button
-                    className={classNames({ [classes.clickable]: utilButton.enabled })}
-                    disabled={!utilButton.enabled}
-                    onClick={utilButton.onClick}
+                    className={classNames({ [classes.clickable]: enabled })}
+                    disabled={!enabled}
+                    onClick={onClick}
+                    key={title}
                 >
-                    {utilButton.title}
+                    {title}
                 </button>
             ))
             }

@@ -6,8 +6,7 @@ import { Column } from '../../models/Column';
 import { useStyles } from './GameColumn.css';
 import GameCircle from '../GameCircle/GameCircle';
 import { Player } from '../../models/enums/Player';
-import { columnsBoundries, columnsSplit, getOtherPlayer } from '../../utils/utils';
-import { MapPlayerTo } from '../../models/MapPlayerTo';
+import { columnsBoundries } from '../../utils/utils';
 
 export interface Props {
     column: Column;
@@ -54,7 +53,7 @@ const GameColumn: React.FC<Props> = (props) => {
     };
 
     const onHoverEnter = () => {
-        setHintedMove({ startIndex: index, endIndex });
+        setHintedMove({ startIndex: index, endIndex, circleEaten: otherPlayerCirclesInDestination === 1 });
     }
 
     const onHoverEnd = () => {
@@ -94,10 +93,10 @@ const GameColumn: React.FC<Props> = (props) => {
             })}
         >
             <div className={classes.columnIdx}>{index}</div>
-            {[Player.PLAYER1, Player.PLAYER2].map(circlesPlayer => (
-                !column.circles[circlesPlayer]
-                    ? <></>
-                    : <div
+            {[Player.PLAYER1, Player.PLAYER2]
+                .filter(circlesPlayer => column.circles[circlesPlayer])
+                .map(circlesPlayer => (
+                    <div
                         key={circlesPlayer}
                         className={classNames(classes.circlesArea, {
                             [classes.clickable]: circlesClickable(circlesPlayer),
@@ -120,7 +119,7 @@ const GameColumn: React.FC<Props> = (props) => {
                             />
                         ))}
                     </div>
-            ))}
+                ))}
             {showHintedMove &&
                 <GameCircle
                     className={classNames(

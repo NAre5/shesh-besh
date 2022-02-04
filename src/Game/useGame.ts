@@ -63,18 +63,24 @@ export const useGame = () => {
             diceIdxs.forEach(diceIdx => {
                 const { endIndex, otherPlayerCirclesInDestination } = getMoveParams(columnId, diceIdx);
 
-                // if (isGameColumn(endIndex))
                 if (otherPlayerCirclesInDestination !== undefined && otherPlayerCirclesInDestination <= 1)
-                    currPossibleMoves.push({ startIndex: columnId, diceIdx, endIndex })
+                    currPossibleMoves.push({
+                        startIndex: columnId,
+                        endIndex,
+                        diceIdx,
+                        circleEaten: otherPlayerCirclesInDestination === 1
+                    })
             })
             return currPossibleMoves;
-        }, [])
+        }, []);
     }, [turnPlayerColumnsIds, getMoveParams]);
 
-    const possibleEndColumns = useMemo<number[]>(() => {
-        return possibleMoves.map(possibleMove => possibleMove.endIndex)
-    }, [possibleMoves])
-    
+    // const possibleEndColumns = useMemo<number[]>(() => (
+    //     possibleMoves.map(possibleMove => possibleMove.endIndex)
+    // ), [possibleMoves]);
+
+    // const  possibleStartColumnsToMove = useMemo<
+
     // const myTurn = useMemo<boolean>(()=>turnPlayer === Players[myUserId])
 
     //#endregion
@@ -103,6 +109,7 @@ export const useGame = () => {
         const newMove: Move = {
             startIndex: selectedColumnIndex,
             endIndex,
+            circleEaten: otherPlayerCirclesInDestination === 1
         }
 
         let newColumns: Column[] = [...columns];
@@ -122,8 +129,7 @@ export const useGame = () => {
             } as MapPlayerTo<number>
         };
 
-        const isEatMove = otherPlayerCirclesInDestination === 1;
-        if (isEatMove) {
+        if (newMove.circleEaten) {
             newColumns[newMove.endIndex] = {
                 circles: {
                     [turnPlayer]: newColumns[newMove.endIndex].circles[turnPlayer],
