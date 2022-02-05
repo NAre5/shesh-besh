@@ -1,8 +1,8 @@
 // import { v4 as uuidv4 } from 'uuid';
-// import { Circle } from '../models/Circle';
+// import { Circle } from 'models/Circle';
 
-import { Column } from '../models/Column';
-import { Player } from '../models/enums/Player';
+import { Column } from 'models/Column';
+import { Player } from 'models/enums/Player';
 
 export type DiceIdx = 0 | 1;
 

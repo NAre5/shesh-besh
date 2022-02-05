@@ -1,13 +1,14 @@
 import React, { memo, useMemo } from 'react';
 import classNames, { Argument } from 'classnames';
 
-import { Move } from '../../models/Move';
-import { Column } from '../../models/Column';
+import { Move } from 'models/Move';
+import { DiceIdx } from 'utils/utils';
+import { Column } from 'models/Column';
+import { Player } from 'models/enums/Player';
+import { PossibleMove } from 'models/PossibleMove';
+
 import { useStyles } from './GameColumn.css';
 import GameCircle from '../GameCircle/GameCircle';
-import { Player } from '../../models/enums/Player';
-import { PossibleMove } from '../../models/PossibleMove';
-import { columnsBoundries, DiceIdx } from '../../utils/utils';
 
 export interface Props {
     column: Column;

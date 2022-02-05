@@ -2,16 +2,17 @@ import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Move } from '../../models/Move';
-import { DiceIdx } from '../../utils/utils';
+import { Move } from 'models/Move';
+import { DiceIdx } from 'utils/utils';
+import { Dices } from 'models/GameTurn';
+import { AppDispatch } from 'redux/store';
+import { Player } from 'models/enums/Player';
+import { MapPlayerTo } from 'models/MapPlayerTo';
+import { PossibleMove } from 'models/PossibleMove';
+import { resetMoves, swapDices, switchTurns, undoMove } from 'redux/Game.slice';
+
 import { useStyles } from './GameUtils.css';
-import { Dices } from '../../models/GameTurn';
-import { AppDispatch } from '../../redux/store';
-import { Player } from '../../models/enums/Player';
 import GameCircle from '../GameCircle/GameCircle';
-import { MapPlayerTo } from '../../models/MapPlayerTo';
-import { PossibleMove } from '../../models/PossibleMove';
-import { resetMoves, swapDices, switchTurns, undoMove } from '../../redux/Game.slice';
 
 interface UtilsButton {
     title: string;

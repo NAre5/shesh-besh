@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Column } from '../models/Column'
-import { Player } from '../models/enums/Player'
-import { Dices } from '../models/GameTurn'
-import { Move } from '../models/Move'
-import { getInitialColumns, getOtherPlayer, getRandomDice } from '../utils/utils'
+
+import { Move } from 'models/Move'
+import { Column } from 'models/Column'
+import { Dices } from 'models/GameTurn'
+import { Player } from 'models/enums/Player'
+import { getInitialColumns, getOtherPlayer, getRandomDice } from 'utils/utils'
 
 // const [playersName, setPlayersName] = useState<MapPlayerTo<string>>({//TODO: make playerName changable
 //     [Player.PLAYER1]: 'naruto',

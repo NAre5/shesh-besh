@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
+import { Move } from 'models/Move';
 import { useGame } from './useGame';
-import { Move } from '../models/Move';
 import { useStyles } from './Game.css';
-import { columnsSplit } from '../utils/utils';
-import { Player } from '../models/enums/Player';
+import { Column } from 'models/Column';
+import { columnsSplit } from 'utils/utils';
+import { Player } from 'models/enums/Player';
 import { GameUtils } from './GameUtils/GameUtils';
 import GameColumn, { Props as GameColumnProps } from './GameColumn/GameColumn';
 
@@ -44,7 +45,7 @@ const Game = () => {
                 <div className={classes.player2Columns}>
                     {columns
                         .slice(columnsSplit[Player.PLAYER2].homeEnd, columnsSplit[Player.PLAYER2].homeStart + 1)
-                        .map((column, index) => {
+                        .map((column: Column, index: number) => {
                             const key = index + columnsSplit[Player.PLAYER2].homeEnd;
                             return <GameColumn
                                 {...{ column }}
@@ -64,7 +65,7 @@ const Game = () => {
                     <div className={classes.divider} />
                     {columns
                         .slice(columnsSplit[Player.PLAYER2].outerEnd, columnsSplit[Player.PLAYER2].outerStart + 1)
-                        .map((column, index) => {
+                        .map((column: any, index: number) => {
                             const key = index + columnsSplit[Player.PLAYER2].outerEnd;
                             return <GameColumn
                                 {...{ column }}
@@ -80,7 +81,7 @@ const Game = () => {
                 <div className={classes.player1Columns}>
                     {columns
                         .slice(columnsSplit[Player.PLAYER1].outerStart, columnsSplit[Player.PLAYER1].outerEnd + 1)
-                        .map((column, index) => {
+                        .map((column: any, index: number) => {
                             const key = index + columnsSplit[Player.PLAYER1].outerStart;
                             return <GameColumn
                                 {...{ column }}
@@ -95,7 +96,7 @@ const Game = () => {
                     <div className={classes.divider} />
                     {columns
                         .slice(columnsSplit[Player.PLAYER1].homeStart, columnsSplit[Player.PLAYER1].homeEnd + 1)
-                        .map((column, index) => {
+                        .map((column: any, index: number) => {
                             const key = index + columnsSplit[Player.PLAYER1].homeStart;
                             return <GameColumn
                                 {...{ column }}

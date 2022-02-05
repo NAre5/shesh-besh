@@ -1,6 +1,6 @@
 import { Move } from './Move';
-import { Player } from './enums/Player';
 import { Column } from './Column';
+import { Player } from './enums/Player';
 
 // export interface CirclesEaten {
 //     [Player.PLAYER1]: number;
@@ -20,4 +20,3 @@ export interface GameTurn {
     circlesEaten: CirclesEaten;
     // isFinished: boolean;
 }
-

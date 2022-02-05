@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Column } from '../models/Column';
-import { Player } from '../models/enums/Player';
-import { MapPlayerTo } from '../models/MapPlayerTo';
-import { PossibleMove } from '../models/PossibleMove';
-import { AppDispatch, StoreState } from '../redux/store';
-import { addMove, GameState, swapDices } from '../redux/Game.slice';
-import { columnsSplit, DiceIdx, diceIdxs, getOtherPlayer, isColumnInHome, isGameColumn, playerDirection } from '../utils/utils';
+import { Column } from 'models/Column';
+import { Player } from 'models/enums/Player';
+import { MapPlayerTo } from 'models/MapPlayerTo';
+import { PossibleMove } from 'models/PossibleMove';
+import { AppDispatch, StoreState } from 'redux/store';
+import { addMove, GameState, swapDices } from 'redux/Game.slice';
+import { columnsSplit, DiceIdx, diceIdxs, getOtherPlayer, isColumnInHome, isGameColumn, playerDirection } from 'utils/utils';
 
 export const useGame = () => {
     //#region states
