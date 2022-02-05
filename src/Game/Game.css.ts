@@ -44,19 +44,20 @@ export const useStyles = makeStyles({
     backgroundColor: 'gray',
   },
   clickable: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
+    cursor: 'pointer',
+  },
+  disabled: {
+    cursor: 'not-allowed',
   },
   player2Column: {
-    borderBottomRightRadius: '50%',
-    borderBottomLeftRadius: '50%',
+    borderBottomRightRadius: '45%',
+    borderBottomLeftRadius: '45%',
   },
   player1Column: {
     // @ts-ignore
     flexDirection: 'column-reverse!important',
-    borderTopRightRadius: '50%',
-    borderTopLeftRadius: '50%',
+    borderTopRightRadius: '45%',
+    borderTopLeftRadius: '45%',
   },
   type1Column: {
     backgroundColor: 'white',

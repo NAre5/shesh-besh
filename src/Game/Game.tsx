@@ -13,7 +13,7 @@ const Game = () => {
     const [hintedMove, setHintedMove] = useState<Move | undefined>(undefined);
 
     const { columns, turnPlayer, dices, circlesEaten, moves, possibleMoves, canResurrectCircleToColumns, canResurrectCircleToPlayerColumn,
-        turnPlayerNeedToReturn, onCircleClick, resurrectCircleToColumn, currDiceIdx, gameEnded} = useGame();
+        turnPlayerNeedToReturn, onCircleClick, resurrectCircleToColumn, currDiceIdx, gameEnded } = useGame();
 
     const sharedGameColumnProps: Omit<GameColumnProps, 'index' | 'column' | 'canResurrectCircle'> = {
         turnPlayerNeedToReturn,
@@ -23,7 +23,7 @@ const Game = () => {
         setHintedMove,
         possibleMoves,
         resurrectCircleToColumn,
-        currDiceIdx
+        currDiceIdx,
         // circlesEaten
     };
 
@@ -35,7 +35,9 @@ const Game = () => {
                     dices,
                     circlesEaten,
                     moves,
-                    gameEnded
+                    gameEnded,
+                    possibleMoves,
+                    currDiceIdx
                 }}
             />
             <div className={classes.game}>
@@ -53,7 +55,8 @@ const Game = () => {
                                 // canResurrectCircle={turnPlayer === Player.PLAYER1 && canResurrectCircleToColumns?.includes(key)}
                                 canResurrectCircle={canResurrectCircleToPlayerColumn(Player.PLAYER1, key)}
                                 _classNames={[classes.player2Column, {
-                                    [classes.clickable]: turnPlayer === Player.PLAYER1 && canResurrectCircleToColumns?.includes(key)
+                                    [classes.clickable]: turnPlayer === Player.PLAYER1 && canResurrectCircleToColumns?.includes(key),
+                                    [classes.disabled]: turnPlayer === Player.PLAYER1 && !(canResurrectCircleToColumns?.includes(key))
                                 }]}
                                 {...sharedGameColumnProps}
                             />
@@ -103,7 +106,8 @@ const Game = () => {
                                 // canResurrectCircle={turnPlayer === Player.PLAYER2 && canResurrectCircleToColumns?.includes(key)}
                                 canResurrectCircle={canResurrectCircleToPlayerColumn(Player.PLAYER2, key)}
                                 _classNames={[classes.player1Column, {
-                                    [classes.clickable]: turnPlayer === Player.PLAYER2 && canResurrectCircleToColumns?.includes(key)
+                                    [classes.clickable]: turnPlayer === Player.PLAYER2 && canResurrectCircleToColumns?.includes(key),
+                                    [classes.disabled]: turnPlayer === Player.PLAYER2 && !(canResurrectCircleToColumns?.includes(key))
                                 }]}
                                 {...sharedGameColumnProps}
                             />

@@ -27,6 +27,7 @@ const initialState: GameState = {
     moves: [],
     turnHistory: [],
     dices: [getRandomDice(), getRandomDice()],
+    // dices: [2, 1],
     // hintedMove: undefined,
 };
 

@@ -6,8 +6,8 @@ import { Column } from '../../models/Column';
 import { useStyles } from './GameColumn.css';
 import GameCircle from '../GameCircle/GameCircle';
 import { Player } from '../../models/enums/Player';
-import { columnsBoundries } from '../../utils/utils';
 import { PossibleMove } from '../../models/PossibleMove';
+import { columnsBoundries, DiceIdx } from '../../utils/utils';
 
 export interface Props {
     column: Column;
@@ -18,11 +18,7 @@ export interface Props {
     _classNames?: Argument[];
     turnPlayerNeedToReturn: boolean;
     turnPlayer: Player;
-    onCircleClick: (selectedColumnIndex: number, diceIndex?: 0 | 1) => void;
-    // getMoveParams: (startIndex: number, diceIndex?: 0 | 1 | undefined) => {
-    //     endIndex: number;
-    //     otherPlayerCirclesInDestination: number | undefined;
-    // };
+    onCircleClick: (selectedColumnIndex: number, diceIndex?: DiceIdx) => void;
     hintedMove: Move | undefined;
     setHintedMove: React.Dispatch<React.SetStateAction<Move | undefined>>;
     // playerSide: Player;
@@ -42,7 +38,7 @@ const GameColumn: React.FC<Props> = (props) => {
     const classes = useStyles();
 
     const possibleMoveFromColumn = useMemo<PossibleMove | undefined>(() => (
-        possibleMoves.find(possibleMove => possibleMove.startIndex === index && possibleMove.diceIdx === currDiceIdx)
+        possibleMoves.find(possibleMove => (possibleMove.startIndex === index) && (possibleMove.diceIdx === currDiceIdx))
     ), [possibleMoves, currDiceIdx]);
 
     const circlesClickable = (player: Player) => {
@@ -97,11 +93,20 @@ const GameColumn: React.FC<Props> = (props) => {
                     <div
                         key={circlesPlayer}
                         className={classNames(classes.circlesArea, {
-                            [classes.clickable]: circlesClickable(circlesPlayer),
-                            [classes.disabled]: !circlesClickable(circlesPlayer),
+                            [classes.clickable]: (turnPlayer === circlesPlayer) && circlesClickable(circlesPlayer),
+                            [classes.disabled]: (turnPlayer === circlesPlayer) && !circlesClickable(circlesPlayer),
+                            // [classes.otherDiceHint]: cursor: hint?
                         })}
-                        onClick={() => { if (circlesClickable(circlesPlayer)) { onCircleClick(index); onHoverEnd(); } }}
-                        onMouseOver={() => circlesClickable(circlesPlayer) && onHoverEnter()}
+                        onClick={() => {
+                            if ((turnPlayer === circlesPlayer) && circlesClickable(circlesPlayer)) {
+                                onCircleClick(index);
+                                onHoverEnd();
+                            }
+                        }}
+                        onMouseOver={() => {
+                            if ((turnPlayer === circlesPlayer) && circlesClickable(circlesPlayer))
+                                onHoverEnter();
+                        }}
                         onMouseOut={onHoverEnd}
                     >
                         {Array.from({ length: column.circles[circlesPlayer] }).map((_, circleIndex) => (

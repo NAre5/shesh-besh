@@ -4,7 +4,9 @@
 import { Column } from '../models/Column';
 import { Player } from '../models/enums/Player';
 
-export const diceIdxs: (0 | 1)[] = [0, 1];
+export type DiceIdx = 0 | 1;
+
+export const diceIdxs: DiceIdx[] = [0, 1];
 
 export const getRandomDice = (): number => (
     Math.floor(Math.random() * 6 + 1)
@@ -69,26 +71,32 @@ export const getInitialColumns = (): Column[] => {
             circles: {
                 [Player.PLAYER1]: 0,
                 [Player.PLAYER2]: 0,
+                // [Player.PLAYER2]: 2,
             }
         })
     );
-    // initialColumns[columnsSplit[Player.PLAYER2].homeEnd].circles[Player.PLAYER1] = 2;
-    initialColumns[columnsSplit[Player.PLAYER2].homeStart].circles[Player.PLAYER2] = 1;
-    // initialColumns[columnsSplit[Player.PLAYER2].outerEnd + 1].circles[Player.PLAYER2] = 3;
-    // initialColumns[columnsSplit[Player.PLAYER2].outerStart].circles[Player.PLAYER1] = 5;
-    // initialColumns[columnsSplit[Player.PLAYER1].outerStart].circles[Player.PLAYER2] = 5;
-    // initialColumns[columnsSplit[Player.PLAYER1].outerEnd - 1].circles[Player.PLAYER1] = 3;
-    initialColumns[columnsSplit[Player.PLAYER1].homeStart].circles[Player.PLAYER1] = 1;
-    // initialColumns[columnsSplit[Player.PLAYER1].homeEnd].circles[Player.PLAYER2] = 2;
+    initialColumns[columnsSplit[Player.PLAYER2].homeEnd].circles[Player.PLAYER1] = 2;
+    initialColumns[columnsSplit[Player.PLAYER2].homeStart].circles[Player.PLAYER2] = 5;
+    initialColumns[columnsSplit[Player.PLAYER2].outerEnd + 1].circles[Player.PLAYER2] = 3;
+    initialColumns[columnsSplit[Player.PLAYER2].outerStart].circles[Player.PLAYER1] = 5;
+    initialColumns[columnsSplit[Player.PLAYER1].outerStart].circles[Player.PLAYER2] = 5;
+    initialColumns[columnsSplit[Player.PLAYER1].outerEnd - 1].circles[Player.PLAYER1] = 3;
+    initialColumns[columnsSplit[Player.PLAYER1].homeStart].circles[Player.PLAYER1] = 5;
+    initialColumns[columnsSplit[Player.PLAYER1].homeEnd].circles[Player.PLAYER2] = 2;
     
-    // initialColumns[columnsSplit[Player.PLAYER2].homeEnd].circles[Player.PLAYER1] = 2;
-    // initialColumns[columnsSplit[Player.PLAYER2].homeStart].circles[Player.PLAYER2] = 5;
-    // initialColumns[columnsSplit[Player.PLAYER2].outerEnd + 1].circles[Player.PLAYER2] = 3;
-    // initialColumns[columnsSplit[Player.PLAYER2].outerStart].circles[Player.PLAYER1] = 5;
-    // initialColumns[columnsSplit[Player.PLAYER1].outerStart].circles[Player.PLAYER2] = 5;
-    // initialColumns[columnsSplit[Player.PLAYER1].outerEnd - 1].circles[Player.PLAYER1] = 3;
-    // initialColumns[columnsSplit[Player.PLAYER1].homeStart].circles[Player.PLAYER1] = 5;
-    // initialColumns[columnsSplit[Player.PLAYER1].homeEnd].circles[Player.PLAYER2] = 2;
+    // initialColumns[0].circles[Player.PLAYER1] = 1;
+
+    // initialColumns[7].circles[Player.PLAYER1] = 1;
+    // initialColumns[7].circles[Player.PLAYER2] = 0;
+    // initialColumns[9].circles[Player.PLAYER2] = 0;
+    // initialColumns[13].circles[Player.PLAYER1] = 1;
+    // initialColumns[13].circles[Player.PLAYER2] = 0;
+    // initialColumns[15].circles[Player.PLAYER2] = 0;
+    // initialColumns[16].circles[Player.PLAYER2] = 0;
+    // initialColumns[columnsSplit[Player.PLAYER1].hole].circles[Player.PLAYER1] = 0;
+    // initialColumns[columnsSplit[Player.PLAYER1].hole].circles[Player.PLAYER2] = 0;
+    // initialColumns[columnsSplit[Player.PLAYER2].hole].circles[Player.PLAYER1] = 0;
+    // initialColumns[columnsSplit[Player.PLAYER2].hole].circles[Player.PLAYER2] = 0;
 
     return initialColumns;
 };

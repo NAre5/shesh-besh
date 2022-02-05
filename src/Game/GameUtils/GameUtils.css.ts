@@ -25,10 +25,21 @@ export const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: '5px'
+    borderRadius: '5px',
+    border: 'solid 2px white'
+  },
+  currDice: {
+    border: 'solid 2px black'
   },
   usedDice: {
     backgroundColor: 'gray',
+    border: 'solid 2px gray'
+  },
+  disabledDice: {
+    background: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 100 100'><path d='M100 0 L0 100 ' stroke='black' stroke-width='1'/><path d='M0 0 L100 100 ' stroke='black' stroke-width='1'/></svg>")`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
+    backgroundSize: '100% 100%, auto',
   },
   clickable: {
     cursor: 'pointer'

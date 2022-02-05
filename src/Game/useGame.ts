@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Move } from '../models/Move';
 import { Column } from '../models/Column';
 import { Player } from '../models/enums/Player';
 import { MapPlayerTo } from '../models/MapPlayerTo';
 import { PossibleMove } from '../models/PossibleMove';
 import { AppDispatch, StoreState } from '../redux/store';
 import { addMove, GameState, swapDices } from '../redux/Game.slice';
-import { columnsBoundries, columnsSplit, diceIdxs, getOtherPlayer, isColumnInHome, isGameColumn, playerDirection } from '../utils/utils';
+import { columnsSplit, DiceIdx, diceIdxs, getOtherPlayer, isColumnInHome, isGameColumn, playerDirection } from '../utils/utils';
 
 export const useGame = () => {
     //#region states
@@ -21,7 +20,6 @@ export const useGame = () => {
 
     const dispatch: AppDispatch = useDispatch();
 
-    //#region memos
     const circlesEaten = useMemo<MapPlayerTo<number>>(() => ({
         [Player.PLAYER1]: columns[columnsSplit[Player.PLAYER2].hole].circles[Player.PLAYER1],
         [Player.PLAYER2]: columns[columnsSplit[Player.PLAYER1].hole].circles[Player.PLAYER2],
@@ -50,144 +48,54 @@ export const useGame = () => {
     // }, [isDicesDouble, dices, turnPlayer, otherPlayer, columns]);
     //TODO: maybe include useRefs like Ben Awad did
 
-    const turnPlayerColumnsIds = useMemo<number[]>(() => (
-        columns
+    const getTurnPlayerColumnsIdsFromColumns = (_columns: Column[]): number[] => (
+        _columns
             .map((column, index) => ({ ...column, index }))
             .filter(column => column.circles[turnPlayer] > 0)
             .map(column => column.index)
+    )
+
+    const turnPlayerColumnsIds = useMemo<number[]>(() => (
+        getTurnPlayerColumnsIdsFromColumns(columns)
     ), [columns, turnPlayer]);
 
-    const currDiceIdx = useMemo<0 | 1>(() => (
-        Math.floor(moves.length / (dices[0] === dices[1] ? 2 : 1)) as 0 | 1
+    const currDiceIdx = useMemo<DiceIdx>(() => (
+        Math.floor(moves.length / (dices[0] === dices[1] ? 2 : 1)) as DiceIdx
     ), [moves, dices]);
 
     const isEndPhase = useMemo<boolean>(() => (
         turnPlayerColumnsIds.every(turnPlayerColumnsId => isColumnInHome(turnPlayer, turnPlayerColumnsId))
     ), [turnPlayerColumnsIds, turnPlayer]);
 
-    useEffect(() => {
-        console.log({ isEndPhase });
-    }, [isEndPhase]);
-
     const gameEnded = useMemo<boolean>(() => (
         turnPlayerColumnsIds.length === 1 && turnPlayerColumnsIds[0] === columnsSplit[turnPlayer].hole
     ), [turnPlayerColumnsIds, turnPlayer]);
 
-    useEffect(() => {
-        console.log({ gameEnded });
-    }, [gameEnded]);
 
 
-    // const possibleMoves = useMemo<{ [diceIndex in 0 | 1]: { startIndex: number }[] }>(() => {
-    const possibleMoves = useMemo<PossibleMove[]>(() => {
-        // include double situation
-        return turnPlayerColumnsIds.reduce<PossibleMove[]>((currPossibleMoves, columnId) => {
-            diceIdxs
-                .slice(currDiceIdx)
-                .forEach(diceIdx => {
-                    if (columnId === columnsSplit[turnPlayer].hole) return currPossibleMoves;
-
-                    const endIndex = columnId + playerDirection[turnPlayer] * dices[diceIdx];
-                    const otherPlayerCirclesInDestination =
-                        !isGameColumn(endIndex)
-                            ? undefined
-                            : columns[endIndex].circles[otherPlayer];
-
-                    if (isEndPhase) {
-                        if (endIndex === columnsSplit[turnPlayer].hole) {
-                            currPossibleMoves.push({
-                                startIndex: columnId,
-                                endIndex,
-                                diceIdx,
-                                circleEaten: false
-                            });
-
-                        } else {
-                            console.log(
-                                otherPlayerCirclesInDestination === undefined,
-                                playerDirection[turnPlayer] > 1,
-                                Math.min(...turnPlayerColumnsIds),
-                                Math.max(...turnPlayerColumnsIds)
-                            );
-
-                            if (otherPlayerCirclesInDestination === undefined
-                                && columnId === (playerDirection[turnPlayer] === 1
-                                    ? Math.min(...turnPlayerColumnsIds)
-                                    : Math.max(...turnPlayerColumnsIds)
-                                )
-                            ) {
-                                currPossibleMoves.push({
-                                    startIndex: columnId,
-                                    endIndex: columnsSplit[turnPlayer].hole,
-                                    diceIdx,
-                                    circleEaten: false
-                                });
-                            }
-                        }
-                    }
-
-                    if (otherPlayerCirclesInDestination !== undefined && otherPlayerCirclesInDestination <= 1) {
-                        currPossibleMoves.push({
-                            startIndex: columnId,
-                            endIndex,
-                            diceIdx,
-                            circleEaten: otherPlayerCirclesInDestination === 1
-                        });
-                    }
-                })
-            return currPossibleMoves;
-        }, []);
-    }, [turnPlayerColumnsIds, turnPlayer, dices, currDiceIdx, isEndPhase]);
-
-    useEffect(() => {
-        console.log({ possibleMoves });
-    }, [possibleMoves]);
-
-    // const possibleEndColumns = useMemo<number[]>(() => (
-    //     possibleMoves.map(possibleMove => possibleMove.endIndex)
-    // ), [possibleMoves]);
-
-    // const  possibleStartColumnsToMove = useMemo<
-
-    // const myTurn = useMemo<boolean>(()=>turnPlayer === Players[myUserId])
-
-    //#endregion
-
-    // maybe useCallback
-    const onCircleClick = (selectedColumnIndex: number, diceIndex?: 0 | 1) => {
-
-        //TODO: if end index is one of ends colunms
-        //TODO: if end index is passed hole column
-
-        const newMove = possibleMoves.find(possibleMove =>
-            (possibleMove.startIndex === selectedColumnIndex)
-            && (isDicesDouble || (possibleMove.diceIdx === (diceIndex || moves.length)))
-        );
-
-        if (!newMove) return;
-
+    const getColumnsAfterPossibleMove = (possibleMove: PossibleMove): Column[] => {
         let newColumns: Column[] = [...columns];
-        const previousStartColumn = columns[newMove.startIndex];
-        newColumns[newMove.startIndex] = {
+        const previousStartColumn = columns[possibleMove.startIndex];
+        newColumns[possibleMove.startIndex] = {
             circles: {
                 [turnPlayer]: previousStartColumn.circles[turnPlayer] - 1,
                 [otherPlayer]: previousStartColumn.circles[otherPlayer],
             } as MapPlayerTo<number>
         };
 
-        const previousEndColumn = columns[newMove.endIndex]
-        newColumns[newMove.endIndex] = {
+        const previousEndColumn = columns[possibleMove.endIndex]
+        newColumns[possibleMove.endIndex] = {
             circles: {
                 [turnPlayer]: previousEndColumn.circles[turnPlayer] + 1,
                 [otherPlayer]: previousEndColumn.circles[otherPlayer],
             } as MapPlayerTo<number>
         };
 
-        if (newMove.circleEaten) {
-            newColumns[newMove.endIndex] = {
+        if (possibleMove.circleEaten) {
+            newColumns[possibleMove.endIndex] = {
                 circles: {
-                    [turnPlayer]: newColumns[newMove.endIndex].circles[turnPlayer],
-                    [otherPlayer]: newColumns[newMove.endIndex].circles[otherPlayer] - 1,
+                    [turnPlayer]: newColumns[possibleMove.endIndex].circles[turnPlayer],
+                    [otherPlayer]: newColumns[possibleMove.endIndex].circles[otherPlayer] - 1,
                 } as MapPlayerTo<number>
             };
 
@@ -199,6 +107,120 @@ export const useGame = () => {
                 } as MapPlayerTo<number>
             }
         }
+        return newColumns;
+    }
+
+    const getPossibleMovesFromColumns = (_columns: Column[], availableDiceIdxs: DiceIdx[]): PossibleMove[] => {
+        return getTurnPlayerColumnsIdsFromColumns(_columns)
+            .reduce<PossibleMove[]>((currPossibleMoves, columnId) => {
+                availableDiceIdxs
+                    .forEach(diceIdx => {
+                        if (columnId === columnsSplit[turnPlayer].hole)
+                            return currPossibleMoves;
+
+                        if (turnPlayerNeedToReturn && columnId !== columnsSplit[otherPlayer].hole)
+                            return currPossibleMoves;
+
+                        const endIndex = columnId + playerDirection[turnPlayer] * dices[diceIdx];
+                        const otherPlayerCirclesInDestination =
+                            !isGameColumn(endIndex)
+                                ? undefined
+                                : columns[endIndex].circles[otherPlayer];
+
+                        if (isEndPhase) {
+                            if (endIndex === columnsSplit[turnPlayer].hole) {
+                                currPossibleMoves.push({
+                                    startIndex: columnId,
+                                    endIndex,
+                                    diceIdx,
+                                    circleEaten: false
+                                });
+                            } else if (otherPlayerCirclesInDestination === undefined
+                                && (columnId === (
+                                    (playerDirection[turnPlayer] === 1
+                                        ? Math.min(...turnPlayerColumnsIds)
+                                        : Math.max(...turnPlayerColumnsIds)
+                                    )
+                                ))
+                            ) {
+                                currPossibleMoves.push({
+                                    startIndex: columnId,
+                                    endIndex: columnsSplit[turnPlayer].hole,
+                                    diceIdx,
+                                    circleEaten: false
+                                });
+                            }
+                        }
+
+                        if (otherPlayerCirclesInDestination !== undefined && otherPlayerCirclesInDestination <= 1) {
+                            currPossibleMoves.push({
+                                startIndex: columnId,
+                                endIndex,
+                                diceIdx,
+                                circleEaten: otherPlayerCirclesInDestination === 1
+                            });
+                        }
+                    })
+                return currPossibleMoves;
+            }, [])
+    }
+
+    const possibleMoves = useMemo<PossibleMove[]>(() => {
+
+        //TODO: include double situation
+        // check again double
+        // 
+        const allPossibleMoves = getPossibleMovesFromColumns(columns, diceIdxs.slice(currDiceIdx));
+
+        if (moves.length > 0 || isDicesDouble || allPossibleMoves.length <= 1)
+            return allPossibleMoves;
+
+        const allPossibleMovesAfterMoves = allPossibleMoves
+            .reduce<{ [PossibleMoveIndex: number]: PossibleMove[] }>(
+                (currPossibleMovesAfterMoves, currPossibleMove, currPossibleMoveIndex) => {
+                    const newColumns = getColumnsAfterPossibleMove(currPossibleMove);
+                    const possibleMovesAfterMove = getPossibleMovesFromColumns(newColumns, [(currPossibleMove.diceIdx + 1) % 2 as DiceIdx]);
+                    // return [...currPossibleMovesAfterMoves, ...possibleMovesAfterMove];
+                    currPossibleMovesAfterMoves[currPossibleMoveIndex] = possibleMovesAfterMove;
+                    return currPossibleMovesAfterMoves;
+                }, []
+            );
+
+        if (Object.values(allPossibleMovesAfterMoves).every(
+            allPossibleMovesAfterMove => allPossibleMovesAfterMove.length === 0)
+        ) {
+            const maxDiceValue = Math.max(...dices);
+            return allPossibleMoves
+                .filter(possibleMove => dices[possibleMove.diceIdx] === maxDiceValue);
+        }
+        //if move block future and others dont, remove blocking
+        return allPossibleMoves
+            .filter((_, possibleMoveIndex) => allPossibleMovesAfterMoves[possibleMoveIndex].length !== 0);//
+
+    }, [turnPlayerColumnsIds, turnPlayer, dices, currDiceIdx, isEndPhase]);
+
+    // const possibleEndColumns = useMemo<number[]>(() => (
+    //     possibleMoves.map(possibleMove => possibleMove.endIndex)
+    // ), [possibleMoves]);
+
+    // const  possibleStartColumnsToMove = useMemo<
+
+    // const myTurn = useMemo<boolean>(()=>turnPlayer === Players[myUserId])
+
+    // maybe useCallback
+    const onCircleClick = (selectedColumnIndex: number, diceIndex?: DiceIdx) => {
+
+        //TODO: if end index is one of ends colunms
+        //TODO: if end index is passed hole column
+
+        const newMove = possibleMoves.find(possibleMove =>
+            (possibleMove.startIndex === selectedColumnIndex)
+            && (isDicesDouble || (possibleMove.diceIdx === (diceIndex || moves.length)))
+        );
+
+        if (!newMove) return;
+
+        const newColumns = getColumnsAfterPossibleMove(newMove);
 
         if (diceIndex !== undefined && !isDicesDouble && diceIndex !== moves.length)
             dispatch(swapDices());
@@ -238,13 +260,11 @@ export const useGame = () => {
     ), [turnPlayer, canResurrectCircleToColumns]);
 
     const resurrectCircleToColumn = (selectedColumnIndex: number) => {
-        console.log('column clicked');
-
         if (!turnPlayerNeedToReturn) return;
         const otherPlayerHoleIndex = columnsSplit[getOtherPlayer(turnPlayer)].hole;
         // const usedDice = Math.abs(selectedColumnIndex - otherPlayerHoleIndex);
         const usedDiceValue = (selectedColumnIndex - otherPlayerHoleIndex) / playerDirection[turnPlayer];
-        const usedDice = dices.findIndex(diceValue => diceValue === usedDiceValue) as (0 | 1);
+        const usedDice = dices.findIndex(diceValue => diceValue === usedDiceValue) as DiceIdx;
 
         onCircleClick(columnsSplit[otherPlayer].hole, usedDice);
     }
@@ -268,28 +288,3 @@ export const useGame = () => {
         gameEnded
     }
 }
-
-
-// useEffect(() => {
-//     console.log({ turnPlayerNeedToReturn });
-// }, [turnPlayerNeedToReturn])
-
-// const currentTurn = useMemo<GameTurn>(() => ({
-//     turnPlayer,
-//     columns,
-//     moves,
-//     dices,
-//     circlesEaten
-// }), [turnPlayer, columns, dices, circlesEaten])
-
-// useEffect(() => {
-//     console.log({ circlesEaten });
-// }, [circlesEaten])
-
-// useEffect(() => {
-//     console.log(dices);
-// }, [dices])
-
-// useEffect(() => {
-//     console.log(columns);
-// }, [columns])
