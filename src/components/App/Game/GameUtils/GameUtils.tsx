@@ -9,7 +9,7 @@ import { AppDispatch } from 'redux/store';
 import { Player } from 'models/enums/Player';
 import { MapPlayerTo } from 'models/MapPlayerTo';
 import { PossibleMove } from 'models/PossibleMove';
-import { resetMoves, swapDices, switchTurns, undoMove } from 'redux/Game.slice';
+import { resetGame, resetMoves, swapDices, switchTurns, undoMove } from 'redux/Game.slice';
 
 import { useStyles } from './GameUtils.css';
 import GameCircle from '../GameCircle/GameCircle';
@@ -40,6 +40,7 @@ export const GameUtils: React.FC<Props> = (props) => {
             (dices[0] === dices[1])
             || (moves.length === 0)
         )
+        && possibleMoves.length !== 0
         && !gameEnded
         //TODO: && im the player
     ), [dices, moves]);
@@ -131,8 +132,17 @@ export const GameUtils: React.FC<Props> = (props) => {
             ))
             }
             {gameEnded &&
-                <div>Game Ended!</div>
+                <>
+                    <div>Game Ended!</div>
+                    <button
+                        className={classNames({ [classes.clickable]: gameEnded })}
+                        onClick={() => dispatch(resetGame())}
+                        onKeyDown={event => event.preventDefault()}
+                    >
+                        reset game
+                    </button>
+                </>
             }
-        </div>
+        </div >
     )
 }

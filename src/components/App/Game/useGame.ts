@@ -20,15 +20,20 @@ export const useGame = () => {
 
     const dispatch: AppDispatch = useDispatch();
 
-    const circlesEaten = useMemo<MapPlayerTo<number>>(() => ({
+    const getCirclesEatenFromColumns = (columns: Column[]): MapPlayerTo<number> => ({
         [Player.PLAYER1]: columns[columnsSplit[Player.PLAYER2].hole].circles[Player.PLAYER1],
         [Player.PLAYER2]: columns[columnsSplit[Player.PLAYER1].hole].circles[Player.PLAYER2],
-    }), [columns])
+    });
 
+    const circlesEaten = useMemo<MapPlayerTo<number>>(() => (
+        getCirclesEatenFromColumns(columns)
+    ), [columns]);
 
     const otherPlayer = useMemo<Player>(() => getOtherPlayer(turnPlayer), [turnPlayer]);
 
     const isDicesDouble = useMemo<boolean>(() => dices[0] === dices[1], [dices])
+
+    // const getTurnPlayerNeedToReturnFromC
 
     const turnPlayerNeedToReturn = useMemo<boolean>(() => (
         circlesEaten[turnPlayer] > 0
@@ -118,14 +123,16 @@ export const useGame = () => {
                         if (columnId === columnsSplit[turnPlayer].hole)
                             return currPossibleMoves;
 
-                        if (turnPlayerNeedToReturn && columnId !== columnsSplit[otherPlayer].hole)
+                        if ((getCirclesEatenFromColumns(_columns)[turnPlayer] > 0)
+                            && columnId !== columnsSplit[otherPlayer].hole
+                        )
                             return currPossibleMoves;
 
                         const endIndex = columnId + playerDirection[turnPlayer] * dices[diceIdx];
                         const otherPlayerCirclesInDestination =
                             !isGameColumn(endIndex)
                                 ? undefined
-                                : columns[endIndex].circles[otherPlayer];
+                                : _columns[endIndex].circles[otherPlayer];
 
                         if (isEndPhase) {
                             if (endIndex === columnsSplit[turnPlayer].hole) {

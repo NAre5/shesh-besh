@@ -73,7 +73,7 @@ const gameSlice = createSlice({
             // else {
             // undo if done moves
             // }
-        }
+        },
         // setHintedMove(state, action: PayloadAction<Move>) {
         //     state.hintedMove = action.payload;
         // },
@@ -86,8 +86,11 @@ const gameSlice = createSlice({
         // incrementByAmount(state, action: PayloadAction<number>) {
         //   state.value += action.payload
         // },
+        resetGame() {
+            return initialState;
+        }
     },
 })
 
-export const { addMove, resetMoves, undoMove, swapDices, switchTurns } = gameSlice.actions
+export const { addMove, resetMoves, undoMove, swapDices, switchTurns, resetGame } = gameSlice.actions
 export const gameReducer = gameSlice.reducer
